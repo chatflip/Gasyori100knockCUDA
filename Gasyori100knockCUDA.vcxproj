@@ -71,6 +71,7 @@
     </Link>
     <CudaCompile>
       <TargetMachinePlatform>64</TargetMachinePlatform>
+      <CompileOut>$(SolutionDir)obj\$(Platform)\$(Configuration)\%(Filename)%(Extension).obj</CompileOut>
     </CudaCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -92,6 +93,7 @@
     </Link>
     <CudaCompile>
       <TargetMachinePlatform>64</TargetMachinePlatform>
+      <CompileOut>$(SolutionDir)obj\$(Platform)\$(Configuration)\%(Filename)%(Extension).obj</CompileOut>
     </CudaCompile>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
