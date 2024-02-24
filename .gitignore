@@ -407,3 +407,5 @@ FodyWeavers.xsd
 
 # ignore 3rdParty Libraries
 !lib/**
+
+output

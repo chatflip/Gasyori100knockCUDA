@@ -1,26 +1,28 @@
 #include <gtest/gtest.h>
 #include <opencv2/opencv.hpp>
+/*
 
-// cv::MatƒIƒuƒWƒFƒNƒg‚ª“™‚µ‚¢‚©‚Ç‚¤‚©‚ğŠm”F‚·‚éŠÖ”
+// cv::Matã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆãŒç­‰ã—ã„ã‹ã©ã†ã‹ã‚’ç¢ºèªã™ã‚‹é–¢æ•°
 bool AreMatEqual(const cv::Mat& mat1, const cv::Mat& mat2) {
-    // “¯‚¶ƒTƒCƒY‚Æƒ^ƒCƒv‚Å‚ ‚é‚±‚Æ‚ğŠm”F
-    if (mat1.size() != mat2.size() || mat1.type() != mat2.type()) {
-        return false;
-    }
-    // —v‘f‚²‚Æ‚É”äŠr
-    return cv::countNonZero(mat1 != mat2) == 0;
+	// åŒã˜ã‚µã‚¤ã‚ºã¨ã‚¿ã‚¤ãƒ—ã§ã‚ã‚‹ã“ã¨ã‚’ç¢ºèª
+	if (mat1.size() != mat2.size() || mat1.type() != mat2.type()) {
+		return false;
+	}
+	// è¦ç´ ã”ã¨ã«æ¯”è¼ƒ
+	return cv::countNonZero(mat1 != mat2) == 0;
 }
 
-// 'MatEquality' ƒeƒXƒgƒP[ƒX
+// 'MatEquality' ãƒ†ã‚¹ãƒˆã‚±ãƒ¼ã‚¹
 TEST(MatEquality, TestMatEquality) {
-    cv::Mat mat1 = (cv::Mat_<int>(2, 2) << 1, 2, 3, 4);
-    cv::Mat mat2 = (cv::Mat_<int>(2, 2) << 1, 2, 3, 4);
+	cv::Mat mat1 = (cv::Mat_<int>(2, 2) << 1, 2, 3, 4);
+	cv::Mat mat2 = (cv::Mat_<int>(2, 2) << 1, 2, 3, 4);
 
-    // AreMatEqualŠÖ”‚ğg—p‚µ‚Ämat1‚Æmat2‚ª“™‚µ‚¢‚©ƒeƒXƒg
-    EXPECT_TRUE(AreMatEqual(mat1, mat2));
+	// AreMatEqualé–¢æ•°ã‚’ä½¿ç”¨ã—ã¦mat1ã¨mat2ãŒç­‰ã—ã„ã‹ãƒ†ã‚¹ãƒˆ
+	EXPECT_TRUE(AreMatEqual(mat1, mat2));
 }
 
 int main(int argc, char** argv) {
-    ::testing::InitGoogleTest(&argc, argv);
-    return RUN_ALL_TESTS();
+	::testing::InitGoogleTest(&argc, argv);
+	return RUN_ALL_TESTS();
 }
+*/
