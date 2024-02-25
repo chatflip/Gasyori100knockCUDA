@@ -7,7 +7,12 @@ jobs:
     steps:
     - uses: actions/checkout@v3
       name: Checkout code
+
+    - name: Add MSBuild to PATH
+      uses: microsoft/setup-msbuild@v1.0.2
+
     - name: Build project
       run: msbuild Gasyori100knockCUDA.sln /p:Configuration=Release /p:Platform="x64"
+      
     - name: Run Google Test
       run: ./bin/x64/Release/Gasyori100knockCUDA.exe
