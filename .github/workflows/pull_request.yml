@@ -2,7 +2,7 @@ name: Gtest
 on: [pull_request]
 
 jobs:
-   format:
+  format:
     runs-on: windows-2022
     steps:
     - uses: actions/checkout@v4
@@ -36,6 +36,7 @@ jobs:
         git push
 
   build-and-gtest:
+    needs: format
     runs-on: windows-2022
     steps:
     - uses: actions/checkout@v4
