@@ -15,10 +15,18 @@
     <ClCompile Include="src\tutorial\tutorial.cpp">
       <Filter>src\tutorial</Filter>
     </ClCompile>
+    <ClCompile Include="src\ImageProcessingTest.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CudaCompile Include="src\kernel.cu">
       <Filter>src</Filter>
     </CudaCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\ImageProcessingTest.h">
+      <Filter>src</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
