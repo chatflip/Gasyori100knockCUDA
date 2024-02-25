@@ -1,21 +1,14 @@
-#include <iostream>
+#include "../ImageProcessingTest.h"
 
-#include <opencv2/core.hpp>
-#include <opencv2/highgui.hpp>
-#include <iostream>
-#include <filesystem>
+TEST_F(ImageProcessingTest, Tutorial) {
+	cv::Mat image = readAssetsImage();
 
-int main(int argc, const char* argv[]) {
-	std::string srcRoot = "assets\\";
-	std::string dstRoot = "output\\tutorial\\";
-	std::filesystem::create_directories(dstRoot);
+	timerCpu->start();
 
-	cv::Mat img = cv::imread(srcRoot + "imori.jpg", cv::IMREAD_COLOR);
+	int width = image.rows;
+	int height = image.cols;
 
-	int width = img.rows;
-	int height = img.cols;
-
-	cv::Mat out = img.clone();
+	cv::Mat out = image.clone();
 
 	for (int i = 0; i < width / 2; i++) {
 		for (int j = 0; j < height / 2; j++) {
@@ -24,11 +17,16 @@ int main(int argc, const char* argv[]) {
 			out.at<cv::Vec3b>(j, i)[2] = tmp;
 		}
 	}
+	timerCpu->stop();
 
-	cv::imwrite(dstRoot + "out.jpg", out);
-	cv::imshow("sample", out);
-	cv::waitKey(0);
-	cv::destroyAllWindows();
+	std::cout << std::format("[{}] CPU time: {:.2f} ms\n", getCurrentTestName(), timerCpu->elapsedMilliseconds());
 
-	return 0;
+	std::string outPath = std::format("{}\\out.png", getOutputDir());
+	cv::imwrite(outPath, out);
+
+	// cv::imshow("sample", out);
+	// cv::waitKey(0);
+	// cv::destroyAllWindows();
+
+	SUCCEED();
 }

@@ -4,7 +4,10 @@
     <Filter Include="src">
       <UniqueIdentifier>{8a430da8-db9c-4ff7-a256-cd62a7f82c8b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\tutorial">
+    <Filter Include="src\Utils">
+      <UniqueIdentifier>{31f2ace9-a3cf-4427-a457-4c1896994919}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Tutorial">
       <UniqueIdentifier>{61e8bc2a-5df6-4603-bb95-6c8879415cb9}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -12,13 +15,27 @@
     <ClCompile Include="src\main.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\tutorial\tutorial.cpp">
-      <Filter>src\tutorial</Filter>
+    <ClCompile Include="src\ImageProcessingTest.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Tutorial\Tutorial.cpp">
+      <Filter>src\Tutorial</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Utils\TimerCpu.cpp">
+      <Filter>src\Utils</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CudaCompile Include="src\kernel.cu">
       <Filter>src</Filter>
     </CudaCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\ImageProcessingTest.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Utils\TimerCpu.h">
+      <Filter>src\Utils</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
