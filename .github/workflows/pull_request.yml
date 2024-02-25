@@ -15,7 +15,7 @@ jobs:
 
     - name: Execute clang-format
       run: |
-        Get-ChildItem -Recurse -Include src/*.cpp, *.hpp, *.c, *.h | ForEach {
+        Get-ChildItem -Recurse -Include src/**/*.cpp, src/**/*.hpp, src/**/*.h | ForEach {
           clang-format -style=file -i $_.FullName
         }
 
@@ -29,7 +29,7 @@ jobs:
     - name: Commit and Push
       if: steps.changes.outputs.changed == 'true'
       run: |
-        git config --global user.email "oo.chat.flip@example.com"
+        git config --global user.email "oo.chat.flip@gmail.com"
         git config --global user.name "chatflip"
         git add -A
         git commit -m "Apply clang-format changes"
