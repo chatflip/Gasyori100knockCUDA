@@ -15,9 +15,8 @@ jobs:
 
     - name: Execute clang-format
       run: |
-        Get-ChildItem -Recurse -Include src/**/*.cpp, src/**/*.hpp, src/**/*.h | ForEach {
-          clang-format -style=file -i $_.FullName
-        }
+        Get-ChildItem src -Recurse -Include *.cpp, *.hpp, *.h, *.cu | ForEach { clang-format -style=file -i $_.FullName }
+
 
     - name: Check Changes
       id: changes
