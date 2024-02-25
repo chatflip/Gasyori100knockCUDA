@@ -13,7 +13,7 @@
   <ItemGroup>
     <ClCompile Include="src\ImageProcessingTest.cpp" />
     <ClCompile Include="src\main.cpp" />
-    <ClCompile Include="src\tutorial\tutorial.cpp" />
+    <ClCompile Include="src\Tutorial\Tutorial.cpp" />
   </ItemGroup>
   <ItemGroup>
     <CudaCompile Include="src\kernel.cu" />

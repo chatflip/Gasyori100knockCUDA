@@ -4,7 +4,7 @@
     <Filter Include="src">
       <UniqueIdentifier>{8a430da8-db9c-4ff7-a256-cd62a7f82c8b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\tutorial">
+    <Filter Include="src\Tutorial">
       <UniqueIdentifier>{61e8bc2a-5df6-4603-bb95-6c8879415cb9}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -12,11 +12,11 @@
     <ClCompile Include="src\main.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\tutorial\tutorial.cpp">
-      <Filter>src\tutorial</Filter>
-    </ClCompile>
     <ClCompile Include="src\ImageProcessingTest.cpp">
       <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Tutorial\Tutorial.cpp">
+      <Filter>src\Tutorial</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
