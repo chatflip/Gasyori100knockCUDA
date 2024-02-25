@@ -3,6 +3,7 @@
 
 #include <opencv2/opencv.hpp>
 #include <gtest/gtest.h>
+#include "Utils/TimerCpu.h"
 
 class ImageProcessingTest : public ::testing::Test
 {
@@ -13,9 +14,9 @@ protected:
 	const std::string& getAssetImagePath() const;
 	std::string getCurrentTestName() const;
 	std::string getOutputDir() const;
+	std::shared_ptr<TimerCpu> timerCpu;
 
 private:
 	const std::string assetImagePath = "assets\\imori.jpg";
-	const std::string outputRoot = "output\\";
 };
 
