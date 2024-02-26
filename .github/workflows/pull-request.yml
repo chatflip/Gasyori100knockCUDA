@@ -30,7 +30,7 @@ jobs:
   build-and-gtest:
     needs: clang-format
     runs-on: windows-2022
-    if: github.actor == "chatflip"
+    if: github.actor == 'chatflip'
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
