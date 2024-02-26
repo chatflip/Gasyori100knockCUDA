@@ -37,7 +37,7 @@ jobs:
         git push origin ${{ github.head_ref }}
 
   build-and-gtest:
-    needs: format
+    needs: clang-format
     runs-on: windows-2022
     steps:
     - uses: actions/checkout@v4
