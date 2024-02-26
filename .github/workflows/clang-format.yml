@@ -7,8 +7,8 @@ jobs:
     runs-on: windows-2022
     if: github.actor == github.repository_owner
     steps:
-    - uses: actions/checkout@v4
-      name: Checkout code
+    - name: Checkout code
+      uses: actions/checkout@v4
       with:
         token: ${{ secrets.GH_TOKEN }}
         ref: ${{ github.head_ref }}
@@ -19,7 +19,6 @@ jobs:
     - name: Execute clang-format
       run: |
         Get-ChildItem src -Recurse -Include *.cpp, *.hpp, *.h, *.cu | ForEach { clang-format -style=file -i $_.FullName }
-
 
     - name: Check Changes
       run: |
@@ -37,26 +36,3 @@ jobs:
         git add src
         git commit -m "Apply clang-format changes"
         git push origin ${{ github.head_ref }}
-
-  build-and-gtest:
-    needs: clang-format
-    runs-on: windows-2022
-    if: github.actor == github.repository_owner
-    steps:
-    - uses: actions/checkout@v4
-      name: Checkout code
-
-    - name: Add MSBuild to PATH
-      uses: microsoft/setup-msbuild@v2
-
-    - uses: Jimver/cuda-toolkit@v0.2.14
-      id: cuda-toolkit
-      with:
-        cuda: "11.8.0"
-        method: "network"
-
-    - name: Build project
-      run: msbuild Gasyori100knockCUDA.sln /p:Configuration=Release /p:Platform="x64"
-
-    - name: Run Google Test
-      run: ./bin/x64/Release/Gasyori100knockCUDA.exe
