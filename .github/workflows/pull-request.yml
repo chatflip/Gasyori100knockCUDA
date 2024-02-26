@@ -4,7 +4,7 @@ on:
     types: [opened, synchronize, reopened]
 jobs:
   clang-format:
-    runs-on: windows-2022
+    runs-on: ubuntu-latest
     if: github.actor == github.repository_owner
     steps:
     - name: Checkout code
@@ -13,29 +13,19 @@ jobs:
         token: ${{ secrets.GH_TOKEN }}
         ref: ${{ github.head_ref }}
 
-    - name: Install llvm
-      run: choco install llvm
+    - name: Install clang-format
+      run: sudo apt-get install -y clang-format
 
     - name: Execute clang-format
       run: |
-        Get-ChildItem src -Recurse -Include *.cpp, *.hpp, *.h, *.cu | ForEach { clang-format -style=file -i $_.FullName }
-
-    - name: Check Changes
-      run: |
-        if git status --porcelain; then
-          echo "CHANGED=true" >> $GITHUB_ENV
-        else
-          echo "CHANGED=false" >> $GITHUB_ENV
-        fi
+        find src -regex '.*\.\(cpp\|hpp\|h\|cu\)' -exec clang-format -style=file -i {} +
 
     - name: Commit and Push
-      if: env.CHANGED == 'true'
       run: |
         git config --global user.email "${GITHUB_ACTOR}"
         git config --global user.name "${GITHUB_ACTOR}@users.noreply.github.com"
         git add src
-        git commit -m "Apply clang-format changes"
-        git push origin ${{ github.head_ref }}
+        git diff --staged --quiet || (git commit -m "Apply clang-format changes" && git push origin ${{ github.head_ref }})
 
   build-and-gtest:
     needs: clang-format
