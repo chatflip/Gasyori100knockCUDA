@@ -37,7 +37,7 @@ jobs:
       id: cuda-toolkit
       with:
         cuda: "11.8.0"
-        method: "local"
+        method: "network"
         use-github-cache: "false"
         use-local-cache: "false"
 
