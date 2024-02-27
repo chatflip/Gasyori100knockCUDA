@@ -17,5 +17,5 @@ class ImageProcessingTest : public ::testing::Test {
   std::shared_ptr<TimerCpu> timerCpu;
 
  private:
-  const std::string assetImagePath = "assets\\imori.jpg";
+  const std::string assetImagePath = "assets\\scene_large.jpg";
 };
