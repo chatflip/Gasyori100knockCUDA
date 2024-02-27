@@ -36,7 +36,9 @@ jobs:
       id: cuda-toolkit
       with:
         cuda: "11.8.0"
-        method: "network"
+        method: "local"
+        sub-packages: '["nvcc", "visual_studio_integration"]'
+        use-local-cache: "false"
 
     - name: Build project
       run: msbuild Gasyori100knockCUDA.sln /p:Configuration=Release /p:Platform="x64"
