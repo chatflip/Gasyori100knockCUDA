@@ -5,6 +5,7 @@ on:
     paths: 
       - 'src/*'
       - '.clang-format'
+      - '.github/workflows/*'
 
 jobs:
   clang-format:
