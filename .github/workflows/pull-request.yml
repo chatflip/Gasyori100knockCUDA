@@ -9,13 +9,9 @@ on:
 jobs:
   clang-format:
     runs-on: ubuntu-latest
-    if: github.actor != 'clang-format-bot'
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
-      with:
-        token: ${{ secrets.GH_TOKEN }}
-        ref: ${{ github.head_ref }}
 
     - name: Install clang-format
       run: sudo apt-get install -y clang-format
@@ -24,19 +20,12 @@ jobs:
       run: |
         find src -regex '.*\.\(cpp\|hpp\|h\|cu\)' -exec clang-format -style=file -i {} +
 
-    - name: Commit and Push
-      uses: EndBug/add-and-commit@v9
-      with:
-        author_name: clang-format-bot
-        author_email: 26509537+chatflip@users.noreply.github.com
-        message: "[CI] Apply clang-format changes"
-      env:
-        GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+    - name: Check for Changes
+      run: git diff --exit-code
 
   build-and-gtest:
     needs: clang-format
     runs-on: windows-2022
-    if: github.actor != 'clang-format-bot'
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
