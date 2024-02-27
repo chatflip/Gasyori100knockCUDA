@@ -37,8 +37,8 @@ jobs:
       id: cuda-toolkit
       with:
         cuda: "11.8.0"
-        method: "local"
-        sub-packages: '["nvcc", "visual_studio_integration"]'
+        method: "network"
+        use-github-cache: "false"
         use-local-cache: "false"
 
     - name: Build project
