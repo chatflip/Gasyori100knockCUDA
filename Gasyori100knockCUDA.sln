@@ -12,6 +12,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ソリューション項目
 		assets\imori_512x512.jpg = assets\imori_512x512.jpg
 		LICENSE = LICENSE
 		README.md = README.md
+		assets\scene_large.jpg = assets\scene_large.jpg
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".github", ".github", "{9F43D00F-2236-4EDE-A7D8-6E1C4C56C60D}"
