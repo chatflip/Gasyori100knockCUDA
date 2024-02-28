@@ -13,6 +13,7 @@
   <ItemGroup>
     <ClCompile Include="src\ImageProcessingTest.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\Question_01\execute_channel_swap.cpp" />
     <ClCompile Include="src\Tutorial\Tutorial.cpp" />
     <ClCompile Include="src\Utils\TimerCpu.cpp" />
   </ItemGroup>
@@ -22,6 +23,9 @@
   <ItemGroup>
     <ClInclude Include="src\ImageProcessingTest.h" />
     <ClInclude Include="src\Utils\TimerCpu.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="src\Question_01\Question.md" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{B3CF37C6-D641-4A3C-B334-85CF40E4DD6B}</ProjectGuid>
