@@ -4,12 +4,12 @@ void ImageProcessingTest::SetUp() { timerCpu = std::make_shared<TimerCpu>(); }
 
 void ImageProcessingTest::TearDown() { timerCpu->reset(); }
 
-const std::string& ImageProcessingTest::getAssetImagePath() const {
-  return assetImagePath;
+const std::string& ImageProcessingTest::getAssetImagePath(bool isLarge) const {
+  return isLarge ? largeImagePath : smallImagePath;
 };
 
-cv::Mat ImageProcessingTest::readAssetsImage() const {
-  cv::Mat image = cv::imread(getAssetImagePath(), cv::IMREAD_COLOR);
+cv::Mat ImageProcessingTest::readAssetsImage(bool isLageImage) const {
+  cv::Mat image = cv::imread(getAssetImagePath(isLageImage), cv::IMREAD_COLOR);
   return image.clone();
 };
 
