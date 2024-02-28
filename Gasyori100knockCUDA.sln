@@ -8,8 +8,6 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ソリューション項目", "ソリューション項目", "{A38F4433-4F9C-4765-B4EB-58D1432AD74D}"
 	ProjectSection(SolutionItems) = preProject
 		.gitignore = .gitignore
-		assets\imori.jpg = assets\imori.jpg
-		assets\imori_512x512.jpg = assets\imori_512x512.jpg
 		LICENSE = LICENSE
 		README.md = README.md
 		assets\scene_large.jpg = assets\scene_large.jpg
@@ -20,6 +18,12 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{89CF409B-6A3C-4966-992C-D0F6C153415D}"
 	ProjectSection(SolutionItems) = preProject
 		.github\workflows\pull_request.yml = .github\workflows\pull_request.yml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "assets", "assets", "{FA82921A-E308-4067-89A7-5BC55ABA3729}"
+	ProjectSection(SolutionItems) = preProject
+		assets\scene_large.jpg = assets\scene_large.jpg
+		assets\scene_small.jpg = assets\scene_small.jpg
 	EndProjectSection
 EndProject
 Global
@@ -39,6 +43,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{9F43D00F-2236-4EDE-A7D8-6E1C4C56C60D} = {A38F4433-4F9C-4765-B4EB-58D1432AD74D}
 		{89CF409B-6A3C-4966-992C-D0F6C153415D} = {9F43D00F-2236-4EDE-A7D8-6E1C4C56C60D}
+		{FA82921A-E308-4067-89A7-5BC55ABA3729} = {A38F4433-4F9C-4765-B4EB-58D1432AD74D}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {0D4ADC50-732D-4628-8760-5B66BA9C8FA9}
