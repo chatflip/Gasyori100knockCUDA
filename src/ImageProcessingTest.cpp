@@ -24,3 +24,25 @@ std::string ImageProcessingTest::getOutputDir() const {
   std::filesystem::create_directories(outputDir);
   return outputDir;
 };
+
+MatCompareResult ImageProcessingTest::compareMat(const cv::Mat& actual,
+                                                 const cv::Mat& desired) const {
+  using enum MatCompareResult;
+  if (actual.size() != desired.size()) {
+    return kSizeMismatch;
+  }
+  if (actual.type() != desired.type()) {
+    return kTypeMismatch;
+  }
+  cv::Mat diff;
+  std::vector<cv::Mat> diffChannels;
+  cv::absdiff(actual, desired, diff);
+  cv::split(diff, diffChannels);
+
+  for (const auto& channel : diffChannels) {
+    if (cv::countNonZero(channel) != 0) {
+      return kContentMismatch;
+    }
+  }
+  return kMatch;
+};

@@ -6,14 +6,25 @@
 
 #include "Utils/TimerCpu.h"
 
+enum class MatCompareResult {
+  kMatch = 0,
+  kContentMismatch = -1,
+  kSizeMismatch = -2,
+  kTypeMismatch = -3,
+  kUnknown = -4
+};
+
 class ImageProcessingTest : public ::testing::Test {
  protected:
   void SetUp() override;
   void TearDown() override;
-  cv::Mat readAssetsImage(bool isLageImage=false) const;
-  const std::string& getAssetImagePath(bool isLarge=false) const;
+  cv::Mat readAssetsImage(bool isLageImage = false) const;
+  const std::string& getAssetImagePath(bool isLarge = false) const;
   std::string getCurrentTestName() const;
   std::string getOutputDir() const;
+  MatCompareResult compareMat(const cv::Mat& actual,
+                              const cv::Mat& desired) const;
+
   std::shared_ptr<TimerCpu> timerCpu;
 
  private:
