@@ -35,6 +35,9 @@
     <CudaCompile Include="src\kernel.cu">
       <Filter>src</Filter>
     </CudaCompile>
+    <CudaCompile Include="src\Question_01\execute_channel_swap.cu">
+      <Filter>src\Question_01</Filter>
+    </CudaCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\ImageProcessingTest.h">

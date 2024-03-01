@@ -1,12 +1,14 @@
 #include "../ImageProcessingTest.h"
 
+namespace {
 cv::Mat MakeQ1desiredMat(cv::Mat image) {
   cv::Mat referenceImage = image.clone();
   cv::cvtColor(referenceImage, referenceImage, cv::COLOR_BGR2RGB);
   return referenceImage;
 }
+}  // namespace
 
-cv::Mat channelSwapCpu(cv::Mat image) {
+cv::Mat bgr2rgbCpu(cv::Mat image) {
   // in-place channel swap
   int width = image.cols;
   int height = image.rows;
@@ -28,7 +30,7 @@ TEST_F(ImageProcessingTest, Question_01_CPU) {
   cv::Mat desiredImage = MakeQ1desiredMat(image);
 
   timerCpu->start();
-  cv::Mat resultCpu = channelSwapCpu(image);
+  cv::Mat resultCpu = bgr2rgbCpu(image);
   timerCpu->stop();
 
   std::cout << std::format("[{}] CPU time: {:.2f} ms\n", getCurrentTestName(),
