@@ -51,8 +51,8 @@ cv::Mat bgr2rgbGpu(cv::Mat image) {
   dim3 gridSize((width + blockSize.x - 1) / blockSize.x,
                 (height + blockSize.y - 1) / blockSize.y);
 
-  bgr2rgbKernel<<< gridSize, blockSize >>>(d_input, d_output, width, height);
-  //cudaDeviceSynchronize();
+  bgr2rgbKernel<<<gridSize, blockSize>>>(d_input, d_output, width, height);
+  // cudaDeviceSynchronize();
   cudaMemcpy(result.data, d_output, numBytes, cudaMemcpyDeviceToHost);
 
   cudaFree(d_input);
