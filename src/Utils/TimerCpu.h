@@ -1,20 +1,18 @@
 #pragma once
 #include <windows.h>
 
-#include <chrono>
-#include <iostream>
+#include "TimerBase.h"
 
-class TimerCpu {
+class TimerCpu : public TimerBase {
  public:
   TimerCpu();
-  ~TimerCpu() = default;
-  void start();
-  void stop();
-  void reset();
-  double elapsedMilliseconds() const;
+  ~TimerCpu();
+  void start(const std::string& name) override;
+  void stop(const std::string& name) override;
+  void reset() override;
+  double elapsedMilliseconds(const std::string& name) const override;
 
  private:
   LARGE_INTEGER frequency;
-  LARGE_INTEGER startTime;
-  LARGE_INTEGER endTime;
+  std::unordered_map<std::string, LARGE_INTEGER> startTimes, endTimes;
 };

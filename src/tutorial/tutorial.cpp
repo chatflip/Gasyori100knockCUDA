@@ -1,33 +1,38 @@
 #include "../ImageProcessingTest.h"
 
-TEST_F(ImageProcessingTest, Tutorial) {
-  cv::Mat image = readAssetsImage();
+cv::Mat drawRedLeftTopHalf(cv::Mat image, std::shared_ptr<TimerBase> timer) {
+  timer->start("Allocate Destination Memory");
+  cv::Mat result = image.clone();
+  timer->stop("Allocate Destination Memory");
 
-  timerCpu->start();
-
-  int width = image.rows;
-  int height = image.cols;
-
-  cv::Mat out = image.clone();
-
-  for (int i = 0; i < width / 2; i++) {
-    for (int j = 0; j < height / 2; j++) {
-      unsigned char tmp = out.at<cv::Vec3b>(j, i)[0];
-      out.at<cv::Vec3b>(j, i)[0] = out.at<cv::Vec3b>(j, i)[2];
-      out.at<cv::Vec3b>(j, i)[2] = tmp;
+  timer->start("Execute Process");
+  int width = image.cols;
+  int height = image.rows;
+  for (int j = 0; j < height / 2; j++) {
+    for (int i = 0; i < width / 2; i++) {
+      unsigned char tmp = result.at<cv::Vec3b>(j, i)[0];
+      result.at<cv::Vec3b>(j, i)[0] = result.at<cv::Vec3b>(j, i)[2];
+      result.at<cv::Vec3b>(j, i)[2] = tmp;
     }
   }
-  timerCpu->stop();
+  timer->stop("Execute Process");
+  return result;
+}
 
-  std::cout << std::format("[{}] CPU time: {:.2f} ms\n", getCurrentTestName(),
-                           timerCpu->elapsedMilliseconds());
+TEST_F(ImageProcessingTest, Tutorial) {
+  std::vector<std::string> ignoreNames = {"Allocate Destination Memory"};
+  std::shared_ptr<TimerBase> timer = std::make_shared<TimerCpu>();
 
-  std::string outPath = std::format("{}\\out.png", getOutputDir());
-  cv::imwrite(outPath, out);
+  cv::Mat image = readAssetsImage();
+  cv::Mat result = drawRedLeftTopHalf(image, timer);
 
-  // cv::imshow("sample", out);
-  // cv::waitKey(0);
-  // cv::destroyAllWindows();
+  float elapsedTime = timer->calculateTotal(ignoreNames);
+  std::string header = timer->createHeader(getCurrentTestName());
+  std::string footer = timer->createFooter(elapsedTime);
+
+  timer->print(header, footer);
+  std::string logPath = std::format("{}\\benckmark.txt", getOutputDir());
+  timer->writeToFile(logPath, header, footer);
 
   SUCCEED();
 }

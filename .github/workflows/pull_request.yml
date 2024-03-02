@@ -19,7 +19,7 @@ jobs:
 
     - name: Execute clang-format
       run: |
-        find src -regex '.*\.\(cpp\|hpp\|h\|cu\)' -exec clang-format -style=file -i {} +
+        find src -regex '.*\.\(h\|cpp\|hpp\|cu\|cuh\)' -exec clang-format -style=file -i {} +
     - name: Check for Changes
       run: git diff --exit-code
 
@@ -45,4 +45,4 @@ jobs:
       run: msbuild Gasyori100knockCUDA.sln /p:Configuration=Release /p:Platform="x64"
 
     - name: Run Google Test
-      run: ./bin/x64/Release/Gasyori100knockCUDA.exe
+      run: ./bin/x64/Release/Gasyori100knockCUDA.exe --gtest_filter=ImageProcessingTest.Question_*_CPU

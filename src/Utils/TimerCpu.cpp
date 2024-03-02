@@ -7,16 +7,48 @@ TimerCpu::TimerCpu() {
   }
 }
 
+TimerCpu::~TimerCpu() {}
+
 void TimerCpu::reset() {
-  startTime.QuadPart = 0;
-  endTime.QuadPart = 0;
+  started.clear();
+  stopped.clear();
+  startTimes.clear();
+  endTimes.clear();
 }
-void TimerCpu::start() { QueryPerformanceCounter(&startTime); }
 
-void TimerCpu::stop() { QueryPerformanceCounter(&endTime); }
+void TimerCpu::start(const std::string& name) {
+  started[name] = true;
+  stopped[name] = false;
+  QueryPerformanceCounter(&startTimes[name]);
+}
 
-double TimerCpu::elapsedMilliseconds() const {
-  double interval = static_cast<double>(endTime.QuadPart - startTime.QuadPart) /
+void TimerCpu::stop(const std::string& name) {
+  stopped[name] = true;
+  QueryPerformanceCounter(&endTimes[name]);
+}
+
+double TimerCpu::elapsedMilliseconds(const std::string& name) const {
+  if (started.count(name) == 0) {
+    std::cerr << "Timer Error: " << name << " has not been started."
+              << std::endl;
+    return -1.0;
+  }
+
+  if (stopped.count(name) == 0) {
+    std::cerr << "Timer Error: " << name << " has not been stopped."
+              << std::endl;
+    return -1.0;
+  }
+
+  if (!started.at(name) || !stopped.at(name)) {
+    std::cerr << "Timer Error: " << name
+              << "Start and stop must be called before getting elapsed time."
+              << std::endl;
+    return 0.0f;
+  }
+
+  double interval = static_cast<double>(endTimes.at(name).QuadPart -
+                                        startTimes.at(name).QuadPart) /
                     static_cast<double>(frequency.QuadPart);
   return 1e3 * interval;
 }
