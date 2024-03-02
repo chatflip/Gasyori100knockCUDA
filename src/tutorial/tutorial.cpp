@@ -1,6 +1,6 @@
 #include "../ImageProcessingTest.h"
 
-cv::Mat drawRedLeftTopHalf(cv::Mat image, std::shared_ptr<TimerCpu> timer) {
+cv::Mat drawRedLeftTopHalf(cv::Mat image, std::shared_ptr<TimerBase> timer) {
   timer->start("Allocate Destination Memory");
   cv::Mat result = image.clone();
   timer->stop("Allocate Destination Memory");
@@ -24,8 +24,8 @@ TEST_F(ImageProcessingTest, Tutorial) {
 
   cv::Mat image = readAssetsImage();
   cv::Mat result = drawRedLeftTopHalf(image, timerCpu);
-  float elapsedTime = timerCpu->calculateTotal(ignoreNames);
 
+  float elapsedTime = timerCpu->calculateTotal(ignoreNames);
   std::string header = timerCpu->createHeader(getCurrentTestName());
   std::string footer = timerCpu->createFooter(elapsedTime);
 

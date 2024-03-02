@@ -31,51 +31,60 @@ __global__ void bgr2rgbKernel(unsigned char* input, unsigned char* output,
   output[idx + 2] = B;
 }
 
-cv::Mat bgr2rgbGpu(cv::Mat image) {
+cv::Mat bgr2rgbGpu(cv::Mat image, std::shared_ptr<TimerBase> timer) {
+  timer->start("Allocate Destination Memory");
+  cv::Mat result = image.clone();
+  timer->stop("Allocate Destination Memory");
+
+  timer->start("Allocate Device Memory");
   int width = image.cols;
   int height = image.rows;
-
-  cv::Mat result = cv::Mat::zeros(height, width, image.type());
-
   uchar *d_input, *d_output;
   size_t numBytes = sizeof(uchar) * width * height * image.channels();
 
   // Allocate memory on gpu
   cudaMalloc(&d_input, numBytes);
   cudaMalloc(&d_output, numBytes);
+  timer->stop("Allocate Device Memory");
 
+  timer->start("Transfer Host to Device Memory");
   // copy host(cpu) to device(gpu)
   cudaMemcpy(d_input, image.data, numBytes, cudaMemcpyHostToDevice);
+  timer->stop("Transfer Host to Device Memory");
 
   dim3 blockSize(16, 16);
   dim3 gridSize((width + blockSize.x - 1) / blockSize.x,
                 (height + blockSize.y - 1) / blockSize.y);
 
+  timer->start("Execute Cuda Kernel");
   bgr2rgbKernel<<<gridSize, blockSize>>>(d_input, d_output, width, height);
-  // cudaDeviceSynchronize();
-  cudaMemcpy(result.data, d_output, numBytes, cudaMemcpyDeviceToHost);
+  timer->stop("Execute Cuda Kernel");
 
+  timer->start("Transfer Device to Host Memory");
+  cudaMemcpy(result.data, d_output, numBytes, cudaMemcpyDeviceToHost);
+  timer->stop("Transfer Device to Host Memory");
+
+  timer->start("Deallocate Device Memory");
   cudaFree(d_input);
   cudaFree(d_output);
+  timer->stop("Deallocate Device Memory");
 
   return result;
 }
 
 TEST_F(ImageProcessingTest, Question_01_GPU) {
+  std::vector<std::string> ignoreNames = {"Allocate Destination Memory"};
+
   cv::Mat image = readAssetsImage(true);
   cv::Mat desiredImage = MakeQ1desiredMat(image);
+  cv::Mat resultGpu = bgr2rgbGpu(image, timerGpu);
 
-  timerCpu->start("aaa");
-  cv::Mat resultGpu = bgr2rgbGpu(image);
-  timerCpu->stop("aaa");
+  float elapsedTime = timerGpu->calculateTotal(ignoreNames);
+  std::string header = timerGpu->createHeader(getCurrentTestName());
+  std::string footer = timerCpu->createFooter(elapsedTime);
 
-  std::cout << std::fixed << std::setprecision(2) << "[" << getCurrentTestName()
-            << "] GPU time: " << timerCpu->elapsedMilliseconds("aaa") << "ms"
-            << std::endl;
-
-  std::string outPath = getOutputDir() + "\\question_01_gpu.png";
-  cv::imwrite(outPath, resultGpu);
-  timerCpu->print();
+  timerGpu->print(header, footer);
+  timerGpu->writeToFile(getOutputDir() + "\\benckmark_gpu.txt", header, footer);
   MatCompareResult compareResult = compareMat(resultGpu, desiredImage);
   EXPECT_EQ(compareResult, MatCompareResult::kMatch);
 }
