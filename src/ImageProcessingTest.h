@@ -31,7 +31,6 @@ class ImageProcessingTest : public ::testing::Test {
   std::string createHeader(const std::string& testName) const;
 
   std::shared_ptr<TimerBase> timer;
- 
 
  private:
   const std::string smallImagePath = "assets\\scene_small.jpg";
