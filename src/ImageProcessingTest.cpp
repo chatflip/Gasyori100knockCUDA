@@ -1,8 +1,6 @@
 #include "ImageProcessingTest.h"
 
 void ImageProcessingTest::SetUp() {
-  timerCpu = std::make_shared<TimerCpu>();
-  timerGpu = std::make_shared<TimerGpu>();
 }
 
 void ImageProcessingTest::TearDown() {}

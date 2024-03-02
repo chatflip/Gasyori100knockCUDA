@@ -13,18 +13,21 @@
   <ItemGroup>
     <ClCompile Include="src\ImageProcessingTest.cpp" />
     <ClCompile Include="src\main.cpp" />
-    <ClCompile Include="src\Question_01\execute_channel_swap.cpp" />
+    <ClCompile Include="src\Question_01\channel_swap_cpu.cpp" />
+    <ClCompile Include="src\Question_01\Question_01.cpp" />
     <ClCompile Include="src\Tutorial\Tutorial.cpp" />
     <ClCompile Include="src\Utils\TimerBase.cpp" />
     <ClCompile Include="src\Utils\TimerCpu.cpp" />
   </ItemGroup>
   <ItemGroup>
     <CudaCompile Include="src\kernel.cu" />
-    <CudaCompile Include="src\Question_01\execute_channel_swap.cu" />
+    <CudaCompile Include="src\Question_01\channel_swap_gpu.cu" />
     <CudaCompile Include="src\Utils\TimerGpu.cu" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\ImageProcessingTest.h" />
+    <ClInclude Include="src\Question_01\channel_swap_cpu.hpp" />
+    <ClInclude Include="src\Question_01\channel_swap_gpu.cuh" />
     <ClInclude Include="src\Utils\TimerBase.h" />
     <ClInclude Include="src\Utils\TimerCpu.h" />
     <ClInclude Include="src\Utils\TimerGpu.h" />

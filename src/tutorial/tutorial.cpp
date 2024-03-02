@@ -21,16 +21,18 @@ cv::Mat drawRedLeftTopHalf(cv::Mat image, std::shared_ptr<TimerBase> timer) {
 
 TEST_F(ImageProcessingTest, Tutorial) {
   std::vector<std::string> ignoreNames = {"Allocate Destination Memory"};
+  std::shared_ptr<TimerBase> timer = std::make_shared<TimerCpu>();
 
   cv::Mat image = readAssetsImage();
-  cv::Mat result = drawRedLeftTopHalf(image, timerCpu);
+  cv::Mat result = drawRedLeftTopHalf(image, timer);
 
-  float elapsedTime = timerCpu->calculateTotal(ignoreNames);
-  std::string header = timerCpu->createHeader(getCurrentTestName());
-  std::string footer = timerCpu->createFooter(elapsedTime);
+  float elapsedTime = timer->calculateTotal(ignoreNames);
+  std::string header = timer->createHeader(getCurrentTestName());
+  std::string footer = timer->createFooter(elapsedTime);
 
-  timerCpu->print(header, footer);
-  timerCpu->writeToFile(std::format("{}\\benckmark.txt", getOutputDir()),
-                        header, footer);
+  timer->print(header, footer);
+  std::string logPath = std::format("{}\\benckmark.txt", getOutputDir());
+  timer->writeToFile(logPath, header, footer);
+
   SUCCEED();
 }

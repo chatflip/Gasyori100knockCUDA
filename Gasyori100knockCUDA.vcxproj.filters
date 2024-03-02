@@ -27,22 +27,25 @@
     <ClCompile Include="src\Utils\TimerCpu.cpp">
       <Filter>src\Utils</Filter>
     </ClCompile>
-    <ClCompile Include="src\Question_01\execute_channel_swap.cpp">
-      <Filter>src\Question_01</Filter>
-    </ClCompile>
     <ClCompile Include="src\Utils\TimerBase.cpp">
       <Filter>src\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Question_01\Question_01.cpp">
+      <Filter>src\Question_01</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Question_01\channel_swap_cpu.cpp">
+      <Filter>src\Question_01</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CudaCompile Include="src\kernel.cu">
       <Filter>src</Filter>
     </CudaCompile>
-    <CudaCompile Include="src\Question_01\execute_channel_swap.cu">
-      <Filter>src\Question_01</Filter>
-    </CudaCompile>
     <CudaCompile Include="src\Utils\TimerGpu.cu">
       <Filter>src\Utils</Filter>
+    </CudaCompile>
+    <CudaCompile Include="src\Question_01\channel_swap_gpu.cu">
+      <Filter>src\Question_01</Filter>
     </CudaCompile>
   </ItemGroup>
   <ItemGroup>
@@ -57,6 +60,12 @@
     </ClInclude>
     <ClInclude Include="src\Utils\TimerBase.h">
       <Filter>src\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Question_01\channel_swap_cpu.hpp">
+      <Filter>src\Question_01</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Question_01\channel_swap_gpu.cuh">
+      <Filter>src\Question_01</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

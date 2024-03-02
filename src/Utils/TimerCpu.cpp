@@ -52,4 +52,3 @@ double TimerCpu::elapsedMilliseconds(const std::string& name) const {
                     static_cast<double>(frequency.QuadPart);
   return 1e3 * interval;
 }
-

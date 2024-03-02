@@ -1,16 +1,5 @@
-#include <cuda_runtime.h>
 
-#include <iomanip>
-
-#include "../ImageProcessingTest.h"
-
-namespace {
-cv::Mat MakeQ1desiredMat(cv::Mat image) {
-  cv::Mat referenceImage = image.clone();
-  cv::cvtColor(referenceImage, referenceImage, cv::COLOR_BGR2RGB);
-  return referenceImage;
-}
-}  // namespace
+#include "channel_swap_gpu.cuh"
 
 __global__ void bgr2rgbKernel(unsigned char* input, unsigned char* output,
                               int width, int height) {
@@ -70,21 +59,4 @@ cv::Mat bgr2rgbGpu(cv::Mat image, std::shared_ptr<TimerBase> timer) {
   timer->stop("Deallocate Device Memory");
 
   return result;
-}
-
-TEST_F(ImageProcessingTest, Question_01_GPU) {
-  std::vector<std::string> ignoreNames = {"Allocate Destination Memory"};
-
-  cv::Mat image = readAssetsImage(true);
-  cv::Mat desiredImage = MakeQ1desiredMat(image);
-  cv::Mat resultGpu = bgr2rgbGpu(image, timerGpu);
-
-  float elapsedTime = timerGpu->calculateTotal(ignoreNames);
-  std::string header = timerGpu->createHeader(getCurrentTestName());
-  std::string footer = timerCpu->createFooter(elapsedTime);
-
-  timerGpu->print(header, footer);
-  timerGpu->writeToFile(getOutputDir() + "\\benckmark_gpu.txt", header, footer);
-  MatCompareResult compareResult = compareMat(resultGpu, desiredImage);
-  EXPECT_EQ(compareResult, MatCompareResult::kMatch);
 }

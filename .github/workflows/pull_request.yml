@@ -19,7 +19,7 @@ jobs:
 
     - name: Execute clang-format
       run: |
-        find src -regex '.*\.\(cpp\|hpp\|h\|cu\)' -exec clang-format -style=file -i {} +
+        find src -regex '.*\.\(h\|cpp\|hpp\|cu\|cuh\)' -exec clang-format -style=file -i {} +
     - name: Check for Changes
       run: git diff --exit-code
 

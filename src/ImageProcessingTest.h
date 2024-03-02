@@ -4,6 +4,7 @@
 #include <filesystem>
 #include <opencv2/opencv.hpp>
 
+#include "Utils/TimerBase.h"
 #include "Utils/TimerCpu.h"
 #include "Utils/TimerGpu.h"
 
@@ -29,8 +30,8 @@ class ImageProcessingTest : public ::testing::Test {
                               const cv::Mat& desired) const;
   std::string createHeader(const std::string& testName) const;
 
-  std::shared_ptr<TimerCpu> timerCpu;
-  std::shared_ptr<TimerGpu> timerGpu;
+  std::shared_ptr<TimerBase> timer;
+ 
 
  private:
   const std::string smallImagePath = "assets\\scene_small.jpg";
