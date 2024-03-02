@@ -10,11 +10,9 @@ class TimerCpu {
   ~TimerCpu() = default;
   void start();
   void stop();
-  void reset();
   double elapsedMilliseconds() const;
 
  private:
-  LARGE_INTEGER frequency;
-  LARGE_INTEGER startTime;
-  LARGE_INTEGER endTime;
+  LARGE_INTEGER frequency, startTime, endTime;
+  bool started, stopped;
 };
