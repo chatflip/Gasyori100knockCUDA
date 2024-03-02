@@ -49,3 +49,4 @@ MatCompareResult ImageProcessingTest::compareMat(const cv::Mat& actual,
   }
   return kMatch;
 };
+

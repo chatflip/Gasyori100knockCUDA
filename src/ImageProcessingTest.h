@@ -27,6 +27,7 @@ class ImageProcessingTest : public ::testing::Test {
   std::string getOutputDir() const;
   MatCompareResult compareMat(const cv::Mat& actual,
                               const cv::Mat& desired) const;
+  std::string createHeader(const std::string& testName) const;
 
   std::shared_ptr<TimerCpu> timerCpu;
   std::shared_ptr<TimerGpu> timerGpu;

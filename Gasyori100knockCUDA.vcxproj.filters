@@ -30,6 +30,9 @@
     <ClCompile Include="src\Question_01\execute_channel_swap.cpp">
       <Filter>src\Question_01</Filter>
     </ClCompile>
+    <ClCompile Include="src\Utils\TimerBase.cpp">
+      <Filter>src\Utils</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CudaCompile Include="src\kernel.cu">
@@ -50,6 +53,9 @@
       <Filter>src\Utils</Filter>
     </ClInclude>
     <ClInclude Include="src\Utils\TimerGpu.h">
+      <Filter>src\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Utils\TimerBase.h">
       <Filter>src\Utils</Filter>
     </ClInclude>
   </ItemGroup>

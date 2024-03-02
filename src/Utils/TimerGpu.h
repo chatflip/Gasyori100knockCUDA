@@ -6,13 +6,15 @@
 #include <map>
 #include <string>
 
-class TimerGpu {
+#include "TimerBase.h"
+
+class TimerGpu : public TimerBase {
  public:
   TimerGpu();
   ~TimerGpu();
   void reset();
-  void start(const std::string& name);
-  void stop(const std::string& name);
+  void start(const std::string& name) override;
+  void stop(const std::string& name) override;
   double elapsedMilliseconds(const std::string& name) const;
   void writeToFile(const std::string& path) const;
 

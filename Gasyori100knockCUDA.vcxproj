@@ -15,6 +15,7 @@
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\Question_01\execute_channel_swap.cpp" />
     <ClCompile Include="src\Tutorial\Tutorial.cpp" />
+    <ClCompile Include="src\Utils\TimerBase.cpp" />
     <ClCompile Include="src\Utils\TimerCpu.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -24,6 +25,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\ImageProcessingTest.h" />
+    <ClInclude Include="src\Utils\TimerBase.h" />
     <ClInclude Include="src\Utils\TimerCpu.h" />
     <ClInclude Include="src\Utils\TimerGpu.h" />
   </ItemGroup>
