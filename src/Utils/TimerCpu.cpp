@@ -27,28 +27,6 @@ void TimerCpu::stop(const std::string& name) {
   QueryPerformanceCounter(&endTimes[name]);
 }
 
-double TimerCpu::calculateTotal(std::vector<std::string> ignoreNames) const {
-  double sum = 0.0;
-
-  for (auto& it : started) {
-    if (stopped.count(it.first) == 0) {
-      std::cerr << "Timer Error: " << it.first << " has not been stopped."
-                << std::endl;
-      continue;
-    }
-
-    if (stopped.at(it.first)) {
-      auto isContain =
-          std::find(ignoreNames.begin(), ignoreNames.end(), it.first);
-      if (isContain != ignoreNames.end()) {
-        continue;
-      }
-      sum += elapsedMilliseconds(it.first);
-    }
-  }
-  return sum;
-}
-
 double TimerCpu::elapsedMilliseconds(const std::string& name) const {
   if (started.count(name) == 0) {
     std::cerr << "Timer Error: " << name << " has not been started."
@@ -75,48 +53,3 @@ double TimerCpu::elapsedMilliseconds(const std::string& name) const {
   return 1e3 * interval;
 }
 
-void TimerCpu::print(const std::string& header,
-                     const std::string& footer) const {
-  std::ostringstream ss;
-  ss << std::fixed << std::setprecision(2) << header;
-  for (auto& it : started) {
-    if (stopped.count(it.first) == 0) {
-      std::cerr << "Timer Error: " << it.first << " has not been stopped."
-                << std::endl;
-      continue;
-    }
-
-    if (stopped.at(it.first)) {
-      ss << it.first << " " << elapsedMilliseconds(it.first) << " ms"
-         << std::endl;
-    }
-  }
-  ss << footer;
-  std::cout << ss.str();
-}
-
-void TimerCpu::writeToFile(const std::string& path, const std::string& header,
-                           const std::string& footer) const {
-  std::ofstream ofs(path);
-  if (!ofs.is_open()) {
-    std::cerr << "Error: could not open file " << path << std::endl;
-    return;
-  }
-
-  ofs << std::fixed << std::setprecision(2); 
-  ofs << header;
-  for (auto& it : started) {
-    if (stopped.count(it.first) == 0) {
-      std::cerr << "Timer Error: " << it.first << " has not been stopped."
-                << std::endl;
-      continue;
-    }
-
-    if (stopped.at(it.first)) {
-      ofs << it.first << " " << elapsedMilliseconds(it.first) << " ms"
-          << std::endl;
-    }
-  }
-  ofs << footer;
-  ofs.close();
-}
