@@ -1,7 +1,6 @@
 #include "ImageProcessingTest.h"
 
-void ImageProcessingTest::SetUp() {
-}
+void ImageProcessingTest::SetUp() {}
 
 void ImageProcessingTest::TearDown() {}
 
@@ -47,4 +46,3 @@ MatCompareResult ImageProcessingTest::compareMat(const cv::Mat& actual,
   }
   return kMatch;
 };
-
