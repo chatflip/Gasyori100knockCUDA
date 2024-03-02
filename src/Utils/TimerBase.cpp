@@ -10,11 +10,13 @@ std::string TimerBase::createHeader(const std::string& testName) const {
 #else
   header << "Build: Release" << std::endl;
 #endif
+  header << "-----------------------------------------\n";
   return header.str();
 };
 
 std::string TimerBase::createFooter(const float elapsedTime) const {
   std::ostringstream footer;
+  footer << "-----------------------------------------\n";
   footer << std::fixed << std::setprecision(2);
   footer << "Elapsed time: " << elapsedTime << " ms" << std::endl;
   return footer.str();

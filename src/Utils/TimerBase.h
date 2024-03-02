@@ -3,9 +3,9 @@
 #include <fstream>
 #include <iomanip>
 #include <iostream>
-#include <map>
 #include <sstream>
 #include <string>
+#include <unordered_map>
 #include <vector>
 
 class TimerBase {
@@ -24,5 +24,5 @@ class TimerBase {
              const std::string& footer = "") const;
 
  protected:
-  std::map<std::string, bool> started, stopped;
+  std::unordered_map<std::string, bool> started, stopped;
 };

@@ -14,5 +14,5 @@ class TimerCpu : public TimerBase {
 
  private:
   LARGE_INTEGER frequency;
-  std::map<std::string, LARGE_INTEGER> startTimes, endTimes;
+  std::unordered_map<std::string, LARGE_INTEGER> startTimes, endTimes;
 };

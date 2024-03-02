@@ -15,5 +15,5 @@ class TimerGpu : public TimerBase {
  private:
   void checkError(cudaError_t result, const std::string& action) const;
 
-  std::map<std::string, cudaEvent_t> startEvents, stopEvents;
+  std::unordered_map<std::string, cudaEvent_t> startEvents, stopEvents;
 };
