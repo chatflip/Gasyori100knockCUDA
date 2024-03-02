@@ -38,12 +38,18 @@
     <CudaCompile Include="src\Question_01\execute_channel_swap.cu">
       <Filter>src\Question_01</Filter>
     </CudaCompile>
+    <CudaCompile Include="src\Utils\TimerGpu.cu">
+      <Filter>src\Utils</Filter>
+    </CudaCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\ImageProcessingTest.h">
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="src\Utils\TimerCpu.h">
+      <Filter>src\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Utils\TimerGpu.h">
       <Filter>src\Utils</Filter>
     </ClInclude>
   </ItemGroup>

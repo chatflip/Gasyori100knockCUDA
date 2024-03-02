@@ -29,12 +29,12 @@ TEST_F(ImageProcessingTest, Question_01_CPU) {
   cv::Mat image = readAssetsImage(true);
   cv::Mat desiredImage = MakeQ1desiredMat(image);
 
-  timerCpu->start();
+  timerCpu->start("aaa");
   cv::Mat resultCpu = bgr2rgbCpu(image);
-  timerCpu->stop();
+  timerCpu->stop("aaa");
 
   std::cout << std::format("[{}] CPU time: {:.2f} ms\n", getCurrentTestName(),
-                           timerCpu->elapsedMilliseconds());
+                           timerCpu->elapsedMilliseconds("aaa"));
 
   std::string outPath = std::format("{}\\question_01_cpu.png", getOutputDir());
   cv::imwrite(outPath, resultCpu);

@@ -20,10 +20,12 @@
   <ItemGroup>
     <CudaCompile Include="src\kernel.cu" />
     <CudaCompile Include="src\Question_01\execute_channel_swap.cu" />
+    <CudaCompile Include="src\Utils\TimerGpu.cu" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\ImageProcessingTest.h" />
     <ClInclude Include="src\Utils\TimerCpu.h" />
+    <ClInclude Include="src\Utils\TimerGpu.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="src\Question_01\Question.md" />

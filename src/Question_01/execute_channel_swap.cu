@@ -22,9 +22,9 @@ __global__ void bgr2rgbKernel(unsigned char* input, unsigned char* output,
   int idx = (y * width + x) * 3;  // 3 channels
 
   // BGR to RGB (simply swap B and R channels)
-  unsigned char B = input[idx];
-  unsigned char G = input[idx + 1];
-  unsigned char R = input[idx + 2];
+  uchar B = input[idx];
+  uchar G = input[idx + 1];
+  uchar R = input[idx + 2];
 
   output[idx] = R;
   output[idx + 1] = G;
@@ -65,12 +65,12 @@ TEST_F(ImageProcessingTest, Question_01_GPU) {
   cv::Mat image = readAssetsImage(true);
   cv::Mat desiredImage = MakeQ1desiredMat(image);
 
-  timerCpu->start();
+  timerCpu->start("aaa");
   cv::Mat resultGpu = bgr2rgbGpu(image);
-  timerCpu->stop();
+  timerCpu->stop("aaa");
 
   std::cout << std::fixed << std::setprecision(2) << "[" << getCurrentTestName()
-            << "] GPU time: " << timerCpu->elapsedMilliseconds() << "ms"
+            << "] GPU time: " << timerCpu->elapsedMilliseconds("aaa") << "ms"
             << std::endl;
 
   std::string outPath = getOutputDir() + "\\question_01_gpu.png";

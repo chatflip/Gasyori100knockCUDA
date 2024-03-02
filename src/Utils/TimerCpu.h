@@ -3,16 +3,19 @@
 
 #include <chrono>
 #include <iostream>
+#include <string>
+#include <unordered_map>
 
 class TimerCpu {
  public:
   TimerCpu();
-  ~TimerCpu() = default;
-  void start();
-  void stop();
-  double elapsedMilliseconds() const;
+  ~TimerCpu();
+  void start(const std::string& name);
+  void stop(const std::string& name);
+  double elapsedMilliseconds(const std::string& name) const;
 
  private:
-  LARGE_INTEGER frequency, startTime, endTime;
-  bool started, stopped;
+  LARGE_INTEGER frequency;
+  std::unordered_map<std::string, bool> started, stopped;
+  std::unordered_map<std::string, LARGE_INTEGER> startTimes, endTimes;
 };

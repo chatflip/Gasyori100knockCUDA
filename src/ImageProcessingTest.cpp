@@ -1,8 +1,11 @@
 #include "ImageProcessingTest.h"
 
-void ImageProcessingTest::SetUp() { timerCpu = std::make_shared<TimerCpu>(); }
+void ImageProcessingTest::SetUp() {
+  timerCpu = std::make_shared<TimerCpu>();
+  timerGpu = std::make_shared<TimerGpu>();
+}
 
-void ImageProcessingTest::TearDown() { timerCpu->reset(); }
+void ImageProcessingTest::TearDown() {}
 
 const std::string& ImageProcessingTest::getAssetImagePath(bool isLarge) const {
   return isLarge ? largeImagePath : smallImagePath;

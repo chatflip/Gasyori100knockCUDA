@@ -3,7 +3,7 @@
 TEST_F(ImageProcessingTest, Tutorial) {
   cv::Mat image = readAssetsImage();
 
-  timerCpu->start();
+  timerCpu->start("aaa");
 
   int width = image.rows;
   int height = image.cols;
@@ -17,10 +17,10 @@ TEST_F(ImageProcessingTest, Tutorial) {
       out.at<cv::Vec3b>(j, i)[2] = tmp;
     }
   }
-  timerCpu->stop();
+  timerCpu->stop("aaa");
 
   std::cout << std::format("[{}] CPU time: {:.2f} ms\n", getCurrentTestName(),
-                           timerCpu->elapsedMilliseconds());
+                           timerCpu->elapsedMilliseconds("aaa"));
 
   std::string outPath = std::format("{}\\out.png", getOutputDir());
   cv::imwrite(outPath, out);
