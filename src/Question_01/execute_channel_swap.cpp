@@ -38,6 +38,7 @@ TEST_F(ImageProcessingTest, Question_01_CPU) {
 
   std::string outPath = std::format("{}\\question_01_cpu.png", getOutputDir());
   cv::imwrite(outPath, resultCpu);
+  timerCpu->print();
 
   MatCompareResult compareResult = compareMat(resultCpu, desiredImage);
   EXPECT_EQ(compareResult, MatCompareResult::kMatch);

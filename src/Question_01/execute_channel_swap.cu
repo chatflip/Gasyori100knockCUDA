@@ -75,7 +75,7 @@ TEST_F(ImageProcessingTest, Question_01_GPU) {
 
   std::string outPath = getOutputDir() + "\\question_01_gpu.png";
   cv::imwrite(outPath, resultGpu);
-
+  timerCpu->print();
   MatCompareResult compareResult = compareMat(resultGpu, desiredImage);
   EXPECT_EQ(compareResult, MatCompareResult::kMatch);
 }

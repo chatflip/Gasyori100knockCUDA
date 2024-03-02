@@ -1,33 +1,39 @@
 #include "../ImageProcessingTest.h"
 
-TEST_F(ImageProcessingTest, Tutorial) {
-  cv::Mat image = readAssetsImage();
+cv::Mat drawRedLeftTopHalf(cv::Mat image, std::shared_ptr<TimerCpu> timer) {
+  timer->start("Allocate Destination Memory");
+  cv::Mat result = image.clone();
+  timer->stop("Allocate Destination Memory");
 
-  timerCpu->start("aaa");
-
-  int width = image.rows;
-  int height = image.cols;
-
-  cv::Mat out = image.clone();
-
-  for (int i = 0; i < width / 2; i++) {
-    for (int j = 0; j < height / 2; j++) {
-      unsigned char tmp = out.at<cv::Vec3b>(j, i)[0];
-      out.at<cv::Vec3b>(j, i)[0] = out.at<cv::Vec3b>(j, i)[2];
-      out.at<cv::Vec3b>(j, i)[2] = tmp;
+  timer->start("Execute Process");
+  int width = image.cols;
+  int height = image.rows;
+  for (int j = 0; j < height / 2; j++) {
+    for (int i = 0; i < width / 2; i++) {
+      unsigned char tmp = result.at<cv::Vec3b>(j, i)[0];
+      result.at<cv::Vec3b>(j, i)[0] = result.at<cv::Vec3b>(j, i)[2];
+      result.at<cv::Vec3b>(j, i)[2] = tmp;
     }
   }
-  timerCpu->stop("aaa");
+  timer->stop("Execute Process");
+  return result;
+}
 
-  std::cout << std::format("[{}] CPU time: {:.2f} ms\n", getCurrentTestName(),
-                           timerCpu->elapsedMilliseconds("aaa"));
+TEST_F(ImageProcessingTest, Tutorial) {
+  std::ostringstream header, footer;
+  std::vector<std::string> ignoreNames = {"Allocate Destination Memory"};
 
-  std::string outPath = std::format("{}\\out.png", getOutputDir());
-  cv::imwrite(outPath, out);
+  cv::Mat image = readAssetsImage();
+  cv::Mat result = drawRedLeftTopHalf(image, timerCpu);
 
-  // cv::imshow("sample", out);
-  // cv::waitKey(0);
-  // cv::destroyAllWindows();
+  header << getCurrentTestName() << std::endl;
+  footer << std::fixed << std::setprecision(2)
+         << "CPU time: " << timerCpu->calculateTotal(ignoreNames) << " ms"
+         << std::endl;
+
+  timerCpu->print(header.str(), footer.str());
+  timerCpu->writeToFile(std::format("{}\\benckmark.txt", getOutputDir()),
+                        header.str(), footer.str());
 
   SUCCEED();
 }
