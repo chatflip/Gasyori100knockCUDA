@@ -29,7 +29,8 @@ cv::Mat bgr2rgbGpu(cv::Mat image, std::shared_ptr<TimerBase> timer) {
   int width = image.cols;
   int height = image.rows;
   uchar *d_input, *d_output;
-  size_t numBytes = sizeof(uchar) * width * height * image.channels();
+  size_t numTensor = width * height * image.channels();
+  size_t numBytes = sizeof(uchar) * numTensor;
 
   // Allocate memory on gpu
   cudaMalloc(&d_input, numBytes);
@@ -58,5 +59,44 @@ cv::Mat bgr2rgbGpu(cv::Mat image, std::shared_ptr<TimerBase> timer) {
   cudaFree(d_output);
   timer->stop("Deallocate Device Memory");
 
+  return result;
+}
+
+cv::Mat bgr2rgbGpuThrust(cv::Mat image, std::shared_ptr<TimerBase> timer) {
+  timer->start("Allocate Destination Memory");
+  cv::Mat result = image.clone();
+  timer->stop("Allocate Destination Memory");
+
+  timer->start("Allocate Device Memory");
+  int width = image.cols;
+  int height = image.rows;
+  size_t numTensor = width * height * image.channels();
+  size_t numBytes = sizeof(uchar) * numTensor;
+
+  // Allocate memory on gpu
+  thrust::device_vector<uchar> d_input(numTensor);
+  thrust::device_vector<uchar> d_output(numTensor);
+  timer->stop("Allocate Device Memory");
+
+  timer->start("Transfer Host to Device Memory");
+  // copy host(cpu) to device(gpu)
+  cudaMemcpy(thrust::raw_pointer_cast(d_input.data()), image.data, numTensor,
+             cudaMemcpyHostToDevice);
+  timer->stop("Transfer Host to Device Memory");
+
+  dim3 blockSize(16, 16);
+  dim3 gridSize((width + blockSize.x - 1) / blockSize.x,
+                (height + blockSize.y - 1) / blockSize.y);
+
+  timer->start("Execute Cuda Kernel");
+  bgr2rgbKernel<<<gridSize, blockSize>>>(
+      thrust::raw_pointer_cast(d_input.data()),
+      thrust::raw_pointer_cast(d_output.data()), width, height);
+  timer->stop("Execute Cuda Kernel");
+
+  timer->start("Transfer Device to Host Memory");
+  cudaMemcpy(result.data, thrust::raw_pointer_cast(d_output.data()), numBytes,
+             cudaMemcpyDeviceToHost);
+  timer->stop("Transfer Device to Host Memory");
   return result;
 }
