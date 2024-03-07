@@ -13,7 +13,8 @@ enum class MatCompareResult {
   kContentMismatch = -1,
   kSizeMismatch = -2,
   kTypeMismatch = -3,
-  kUnknown = -4
+  kChannelMismatch = -4,
+  kUnknown = -5
 };
 
 class ImageProcessingTest : public ::testing::Test {

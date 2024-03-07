@@ -34,6 +34,9 @@ MatCompareResult ImageProcessingTest::compareMat(const cv::Mat& actual,
   if (actual.type() != desired.type()) {
     return kTypeMismatch;
   }
+  if (actual.channels() != desired.channels()) {
+	return kChannelMismatch;
+  }
   cv::Mat diff;
   std::vector<cv::Mat> diffChannels;
   cv::absdiff(actual, desired, diff);
