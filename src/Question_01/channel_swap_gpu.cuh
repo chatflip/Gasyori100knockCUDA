@@ -8,6 +8,12 @@
 
 __global__ void bgr2rgbKernel(unsigned char* input, unsigned char* output,
                               int width, int height);
+
+__global__ void bgr2rgbTextureKernel(cudaTextureObject_t texObj, uchar4* output,
+                                     int width, int height);
+
 cv::Mat bgr2rgbGpu(cv::Mat image, std::shared_ptr<TimerBase> timer);
 
 cv::Mat bgr2rgbGpuThrust(cv::Mat image, std::shared_ptr<TimerBase> timer);
+
+cv::Mat bgr2rgbGpuTexture(cv::Mat image, std::shared_ptr<TimerBase> timer);

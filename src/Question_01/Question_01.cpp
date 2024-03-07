@@ -69,3 +69,26 @@ TEST_F(ImageProcessingTest, Question_01_gpu_thrust) {
 
   EXPECT_EQ(compareResult, MatCompareResult::kMatch);
 }
+
+TEST_F(ImageProcessingTest, Question_01_gpu_texture) {
+  std::vector<std::string> ignoreNames = {
+      "Allocate Destination Memory", "Optimize Input Image For Texture Memory",
+      "Restore Output Image"};
+  std::shared_ptr<TimerBase> timer = std::make_shared<TimerGpu>();
+
+  cv::Mat image = readAssetsImage(true);
+  cv::Mat desiredImage = MakeQ1desiredMat(image);
+  cv::Mat resultGpu = bgr2rgbGpuTexture(image, timer);
+
+  float elapsedTime = timer->calculateTotal(ignoreNames);
+  std::string header = timer->createHeader(getCurrentTestName());
+  std::string footer = timer->createFooter(elapsedTime);
+
+  timer->print(header, footer);
+  std::string logPath =
+      std::format("{}\\benckmark_gpu_thrust.txt", getOutputDir());
+  timer->writeToFile(logPath, header, footer);
+  MatCompareResult compareResult = compareMat(resultGpu, desiredImage);
+
+  EXPECT_EQ(compareResult, MatCompareResult::kMatch);
+}
