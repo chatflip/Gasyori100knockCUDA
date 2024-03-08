@@ -1,0 +1,7 @@
+Tutorial
+Build: Release
+-----------------------------------------
+Allocate Destination Memory 0.01 ms
+Execute Process 0.03 ms
+-----------------------------------------
+Elapsed time: 0.04 ms

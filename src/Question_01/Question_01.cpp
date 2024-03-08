@@ -2,13 +2,16 @@
 #include "channel_swap_cpu.hpp"
 #include "channel_swap_gpu.cuh"
 
+namespace {
 cv::Mat MakeQ1desiredMat(cv::Mat image) {
   cv::Mat referenceImage = image.clone();
   cv::cvtColor(referenceImage, referenceImage, cv::COLOR_BGR2RGB);
   return referenceImage;
 }
+}  // namespace
 
 TEST_F(ImageProcessingTest, Question_01_cpu) {
+  int numQuestions = 1;
   std::vector<std::string> ignoreNames = {"Allocate Destination Memory"};
   std::shared_ptr<TimerBase> timer = std::make_shared<TimerCpu>();
 
@@ -21,7 +24,8 @@ TEST_F(ImageProcessingTest, Question_01_cpu) {
   std::string footer = timer->createFooter(elapsedTime);
 
   timer->print(header, footer);
-  std::string logPath = std::format("{}\\benckmark_cpu.txt", getOutputDir());
+  std::string logPath =
+      std::format("{}\\benckmark_cpu.log", getLogDir(numQuestions));
   timer->writeToFile(logPath, header, footer);
   MatCompareResult compareResult = compareMat(resultCpu, desiredImage);
 
@@ -29,6 +33,7 @@ TEST_F(ImageProcessingTest, Question_01_cpu) {
 }
 
 TEST_F(ImageProcessingTest, Question_01_gpu_raw) {
+  int numQuestions = 1;
   std::vector<std::string> ignoreNames = {"Allocate Destination Memory"};
   std::shared_ptr<TimerBase> timer = std::make_shared<TimerGpu>();
 
@@ -42,7 +47,7 @@ TEST_F(ImageProcessingTest, Question_01_gpu_raw) {
 
   timer->print(header, footer);
   std::string logPath =
-      std::format("{}\\benckmark_gpu_raw.txt", getOutputDir());
+      std::format("{}\\benckmark_gpu_raw.log", getLogDir(numQuestions));
   timer->writeToFile(logPath, header, footer);
   MatCompareResult compareResult = compareMat(resultGpu, desiredImage);
 
@@ -50,6 +55,7 @@ TEST_F(ImageProcessingTest, Question_01_gpu_raw) {
 }
 
 TEST_F(ImageProcessingTest, Question_01_gpu_thrust) {
+  int numQuestions = 1;
   std::vector<std::string> ignoreNames = {"Allocate Destination Memory"};
   std::shared_ptr<TimerBase> timer = std::make_shared<TimerGpu>();
 
@@ -63,7 +69,7 @@ TEST_F(ImageProcessingTest, Question_01_gpu_thrust) {
 
   timer->print(header, footer);
   std::string logPath =
-      std::format("{}\\benckmark_gpu_thrust.txt", getOutputDir());
+      std::format("{}\\benckmark_gpu_thrust.log", getLogDir(numQuestions));
   timer->writeToFile(logPath, header, footer);
   MatCompareResult compareResult = compareMat(resultGpu, desiredImage);
 
@@ -71,6 +77,7 @@ TEST_F(ImageProcessingTest, Question_01_gpu_thrust) {
 }
 
 TEST_F(ImageProcessingTest, Question_01_gpu_texture) {
+  int numQuestions = 1;
   std::vector<std::string> ignoreNames = {
       "Allocate Destination Memory", "Optimize Input Image For Texture Memory",
       "Restore Output Image"};
@@ -86,7 +93,7 @@ TEST_F(ImageProcessingTest, Question_01_gpu_texture) {
 
   timer->print(header, footer);
   std::string logPath =
-      std::format("{}\\benckmark_gpu_thrust.txt", getOutputDir());
+      std::format("{}\\benckmark_gpu_texture.log", getLogDir(numQuestions));
   timer->writeToFile(logPath, header, footer);
   MatCompareResult compareResult = compareMat(resultGpu, desiredImage);
 

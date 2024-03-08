@@ -19,8 +19,14 @@ std::string ImageProcessingTest::getCurrentTestName() const {
   return testInfo->name();
 };
 
-std::string ImageProcessingTest::getOutputDir() const {
-  std::string outputDir = std::format("output\\{}", getCurrentTestName());
+std::string ImageProcessingTest::getLogDir() const {
+  std::string outputDir = std::format("log\\{}", getCurrentTestName());
+  std::filesystem::create_directories(outputDir);
+  return outputDir;
+};
+
+std::string ImageProcessingTest::getLogDir(int numQuestion) const {
+  std::string outputDir = std::format("log\\Question{:02d}", numQuestion);
   std::filesystem::create_directories(outputDir);
   return outputDir;
 };
@@ -35,7 +41,7 @@ MatCompareResult ImageProcessingTest::compareMat(const cv::Mat& actual,
     return kTypeMismatch;
   }
   if (actual.channels() != desired.channels()) {
-	return kChannelMismatch;
+    return kChannelMismatch;
   }
   cv::Mat diff;
   std::vector<cv::Mat> diffChannels;

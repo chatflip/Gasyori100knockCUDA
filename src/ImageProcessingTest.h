@@ -26,7 +26,8 @@ class ImageProcessingTest : public ::testing::Test {
   cv::Mat readAssetsImage(bool isLageImage = false) const;
   const std::string& getAssetImagePath(bool isLarge = false) const;
   std::string getCurrentTestName() const;
-  std::string getOutputDir() const;
+  std::string getLogDir() const;
+  std::string getLogDir(int numQuestion) const;
   MatCompareResult compareMat(const cv::Mat& actual,
                               const cv::Mat& desired) const;
   std::string createHeader(const std::string& testName) const;

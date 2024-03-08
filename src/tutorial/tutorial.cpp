@@ -31,7 +31,7 @@ TEST_F(ImageProcessingTest, Tutorial) {
   std::string footer = timer->createFooter(elapsedTime);
 
   timer->print(header, footer);
-  std::string logPath = std::format("{}\\benckmark.txt", getOutputDir());
+  std::string logPath = std::format("{}\\benckmark.log", getLogDir());
   timer->writeToFile(logPath, header, footer);
 
   SUCCEED();
