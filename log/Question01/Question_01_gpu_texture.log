@@ -1,0 +1,17 @@
+Question_01_gpu_texture
+CPU: 
+GPU: 
+Build: Release
+-----------------------------------------
+Optimize Input Image For Texture Memory 18.31 ms
+Allocate Device Memory 8.72 ms
+Transfer Host to Device 17.37 ms
+Create Texture Memory 0.04 ms
+Execute Cuda Kernel 0.80 ms
+Transfer Device to Host Memory 29.54 ms
+Deallocate Device Memory 2.44 ms
+Wait For GPU Execution 0.01 ms
+Restore Output Image 46.60 ms
+Allocate Result Memory 0.02 ms
+-----------------------------------------
+Elapsed time: 129.25 ms

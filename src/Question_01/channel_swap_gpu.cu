@@ -1,8 +1,8 @@
 
 #include "channel_swap_gpu.cuh"
 
-__global__ void bgr2rgbKernel(unsigned char* input, unsigned char* output,
-                              int width, int height) {
+__global__ void bgr2rgbKernel(uchar* input, uchar* output, int width,
+                              int height) {
   int x = blockIdx.x * blockDim.x + threadIdx.x;
   int y = blockIdx.y * blockDim.y + threadIdx.y;
 
@@ -20,85 +20,18 @@ __global__ void bgr2rgbKernel(unsigned char* input, unsigned char* output,
   output[idx + 2] = B;
 }
 
-cv::Mat bgr2rgbGpu(cv::Mat image, std::shared_ptr<TimerBase> timer) {
-  timer->start("Allocate Destination Memory");
-  cv::Mat result = image.clone();
-  timer->stop("Allocate Destination Memory");
+__global__ void bgr2rgbInplaceKernel(uchar* input, int width, int height) {
+  int x = blockIdx.x * blockDim.x + threadIdx.x;
+  int y = blockIdx.y * blockDim.y + threadIdx.y;
 
-  timer->start("Allocate Device Memory");
-  int width = image.cols;
-  int height = image.rows;
-  uchar *d_input, *d_output;
-  size_t numTensor = width * height * image.channels();
-  size_t numBytes = sizeof(uchar) * numTensor;
+  if (x >= width || y >= height) return;
 
-  // Allocate memory on gpu
-  cudaMalloc(&d_input, numBytes);
-  cudaMalloc(&d_output, numBytes);
-  timer->stop("Allocate Device Memory");
+  int idx = (y * width + x) * 3;  // 3 channels
 
-  timer->start("Transfer Host to Device Memory");
-  // copy host(cpu) to device(gpu)
-  cudaMemcpy(d_input, image.data, numBytes, cudaMemcpyHostToDevice);
-  timer->stop("Transfer Host to Device Memory");
-
-  dim3 blockSize(16, 16);
-  dim3 gridSize((width + blockSize.x - 1) / blockSize.x,
-                (height + blockSize.y - 1) / blockSize.y);
-
-  timer->start("Execute Cuda Kernel");
-  bgr2rgbKernel<<<gridSize, blockSize>>>(d_input, d_output, width, height);
-  timer->stop("Execute Cuda Kernel");
-
-  timer->start("Transfer Device to Host Memory");
-  cudaMemcpy(result.data, d_output, numBytes, cudaMemcpyDeviceToHost);
-  timer->stop("Transfer Device to Host Memory");
-
-  timer->start("Deallocate Device Memory");
-  cudaFree(d_input);
-  cudaFree(d_output);
-  timer->stop("Deallocate Device Memory");
-
-  return result;
-}
-
-cv::Mat bgr2rgbGpuThrust(cv::Mat image, std::shared_ptr<TimerBase> timer) {
-  timer->start("Allocate Destination Memory");
-  cv::Mat result = image.clone();
-  timer->stop("Allocate Destination Memory");
-
-  timer->start("Allocate Device Memory");
-  int width = image.cols;
-  int height = image.rows;
-  size_t numTensor = width * height * image.channels();
-  size_t numBytes = sizeof(uchar) * numTensor;
-
-  // Allocate memory on gpu
-  thrust::device_vector<uchar> d_input(numTensor);
-  thrust::device_vector<uchar> d_output(numTensor);
-  timer->stop("Allocate Device Memory");
-
-  timer->start("Transfer Host to Device Memory");
-  // copy host(cpu) to device(gpu)
-  cudaMemcpy(thrust::raw_pointer_cast(d_input.data()), image.data, numTensor,
-             cudaMemcpyHostToDevice);
-  timer->stop("Transfer Host to Device Memory");
-
-  dim3 blockSize(16, 16);
-  dim3 gridSize((width + blockSize.x - 1) / blockSize.x,
-                (height + blockSize.y - 1) / blockSize.y);
-
-  timer->start("Execute Cuda Kernel");
-  bgr2rgbKernel<<<gridSize, blockSize>>>(
-      thrust::raw_pointer_cast(d_input.data()),
-      thrust::raw_pointer_cast(d_output.data()), width, height);
-  timer->stop("Execute Cuda Kernel");
-
-  timer->start("Transfer Device to Host Memory");
-  cudaMemcpy(result.data, thrust::raw_pointer_cast(d_output.data()), numBytes,
-             cudaMemcpyDeviceToHost);
-  timer->stop("Transfer Device to Host Memory");
-  return result;
+  // BGR to RGB (simply swap B and R channels)
+  uchar temp = input[idx];
+  input[idx] = input[idx + 2];
+  input[idx + 2] = temp;
 }
 
 __global__ void bgr2rgbTextureKernel(cudaTextureObject_t texObj, uchar4* output,
@@ -120,33 +53,126 @@ __global__ void bgr2rgbTextureKernel(cudaTextureObject_t texObj, uchar4* output,
   output[y * width + x] = rgbaValue;
 }
 
-cv::Mat bgr2rgbGpuTexture(cv::Mat image, std::shared_ptr<TimerBase> timer) {
-  timer->start("Allocate Destination Memory");
+cv::Mat bgr2rgbGpuInplace(cv::Mat image, cudaStream_t stream,
+                          std::shared_ptr<TimerCpu> cpuTimer,
+                          std::shared_ptr<TimerGpu> gpuTimer) {
+  cpuTimer->start("Allocate Result Memory");
+  cv::Mat result = image.clone();
+  cpuTimer->stop("Allocate Result Memory");
+
+  gpuTimer->start("Async Allocate Device Memory", stream);
+  int width = image.cols;
+  int height = image.rows;
+  uchar* d_input;
+  size_t numTensor = width * height * image.channels();
+  size_t numBytes = sizeof(uchar) * numTensor;
+  // Allocate memory on gpu
+  cudaMallocAsync(&d_input, numBytes, stream);
+  gpuTimer->stop("Async Allocate Device Memory", stream, false);
+
+  gpuTimer->start("Async Transfer Host to Device", stream);
+  // copy host(cpu) to device(gpu)
+  cudaMemcpyAsync(d_input, image.data, numBytes, cudaMemcpyHostToDevice,
+                  stream);
+  gpuTimer->stop("Async Transfer Host to Device", stream, false);
+
+  dim3 blockSize(16, 16);
+  dim3 gridSize((width + blockSize.x - 1) / blockSize.x,
+                (height + blockSize.y - 1) / blockSize.y);
+
+  gpuTimer->start("Async Execute Cuda Kernel", stream);
+  size_t sharedMemSizeByte = 0;
+  bgr2rgbInplaceKernel<<<gridSize, blockSize, sharedMemSizeByte, stream>>>(
+      d_input, width, height);
+  gpuTimer->stop("Async Execute Cuda Kernel", stream, false);
+
+  gpuTimer->start("Async Transfer Device to Host Memory", stream);
+  cudaMemcpyAsync(result.data, d_input, numBytes, cudaMemcpyDeviceToHost,
+                  stream);
+  gpuTimer->stop("Async Transfer Device to Host Memory", stream, false);
+
+  gpuTimer->start("Async Deallocate Device Memory", stream);
+  cudaFreeAsync(d_input, stream);
+  gpuTimer->stop("Async Deallocate Device Memory", stream, false);
+
+  gpuTimer->start("Wait For GPU Execution");
+  cudaStreamSynchronize(stream);
+  cudaStreamDestroy(stream);
+  gpuTimer->stop("Wait For GPU Execution");
+
+  return result;
+}
+
+cv::Mat bgr2rgbGpuThrust(cv::Mat image, cudaStream_t stream,
+                         std::shared_ptr<TimerCpu> cpuTimer,
+                         std::shared_ptr<TimerGpu> gpuTimer) {
+  cpuTimer->start("Allocate Result Memory");
+  int width = image.cols;
+  int height = image.rows;
+  cv::Mat result(height, width, image.type());
+  cpuTimer->stop("Allocate Result Memory");
+
+  gpuTimer->start("Allocate And Transfer Memory");
+  size_t numTensor = width * height * image.channels();
+
+  // Allocate memory on gpu
+  thrust::device_vector<uchar> d_input(image.data, image.data + numTensor);
+  thrust::device_vector<uchar> d_output(numTensor);
+  gpuTimer->stop("Allocate And Transfer Memory", stream, false);
+
+  dim3 blockSize(16, 16);
+  dim3 gridSize((width + blockSize.x - 1) / blockSize.x,
+                (height + blockSize.y - 1) / blockSize.y);
+
+  gpuTimer->start("Async Execute Cuda Kernel");
+  size_t sharedMemSizeByte = 0;
+  bgr2rgbKernel<<<gridSize, blockSize, sharedMemSizeByte, stream>>>(
+      thrust::raw_pointer_cast(d_input.data()),
+      thrust::raw_pointer_cast(d_output.data()), width, height);
+  gpuTimer->stop("Async Execute Cuda Kernel", stream, false);
+
+  gpuTimer->start("Async Transfer Device to Host Memory");
+  cudaMemcpyAsync(result.data, thrust::raw_pointer_cast(d_output.data()),
+                  numTensor * sizeof(uchar), cudaMemcpyDeviceToHost, stream);
+  gpuTimer->stop("Async Transfer Device to Host Memory", stream, false);
+
+  gpuTimer->start("Wait For GPU Execution");
+  cudaStreamSynchronize(stream);
+  cudaStreamDestroy(stream);
+  gpuTimer->stop("Wait For GPU Execution");
+
+  return result;
+}
+
+cv::Mat bgr2rgbGpuTexture(cv::Mat image, cudaStream_t stream,
+                          std::shared_ptr<TimerCpu> cpuTimer,
+                          std::shared_ptr<TimerGpu> gpuTimer) {
+  cpuTimer->start("Allocate Result Memory");
   int width = image.cols;
   int height = image.rows;
   size_t numBytes = sizeof(uchar4) * width * height;
   cv::Mat result(height, width, CV_8UC4);
-  timer->stop("Allocate Destination Memory");
+  cpuTimer->stop("Allocate Result Memory");
 
-  timer->start("Optimize Input Image For Texture Memory");
+  gpuTimer->start("Optimize Input Image For Texture Memory");
   cv::Mat inputBGRA;
   cv::cvtColor(image, inputBGRA, cv::COLOR_BGR2BGRA);
-  timer->stop("Optimize Input Image For Texture Memory");
+  gpuTimer->stop("Optimize Input Image For Texture Memory");
 
-  timer->start("Allocate Device Memory");
+  gpuTimer->start("Allocate Device Memory");
   cudaArray* cuArray;
   cudaChannelFormatDesc channelDesc = cudaCreateChannelDesc<uchar4>();
   cudaMallocArray(&cuArray, &channelDesc, width, height);
   uchar4* d_output;
   cudaMalloc(&d_output, numBytes);
-  timer->stop("Allocate Device Memory");
+  gpuTimer->stop("Allocate Device Memory");
 
-  timer->start("Transfer Host to Device Memory");
+  gpuTimer->start("Transfer Host to Device");
   cudaMemcpyToArray(cuArray, 0, 0, inputBGRA.data, inputBGRA.step * height,
                     cudaMemcpyHostToDevice);
-  timer->stop("Transfer Host to Device Memory");
+  gpuTimer->stop("Transfer Host to Device");
 
-  timer->start("Create Texture Memory");
+  gpuTimer->start("Create Texture Memory");
   struct cudaResourceDesc resDesc;
   memset(&resDesc, 0, sizeof(resDesc));
   resDesc.resType = cudaResourceTypeArray;
@@ -162,33 +188,33 @@ cv::Mat bgr2rgbGpuTexture(cv::Mat image, std::shared_ptr<TimerBase> timer) {
 
   cudaTextureObject_t texObj = 0;
   cudaCreateTextureObject(&texObj, &resDesc, &texDesc, NULL);
-  timer->stop("Create Texture Memory");
+  gpuTimer->stop("Create Texture Memory");
 
-  timer->start("Execute Cuda Kernel");
+  gpuTimer->start("Execute Cuda Kernel");
   dim3 blockSize(16, 16);
   dim3 gridSize((width + blockSize.x - 1) / blockSize.x,
                 (height + blockSize.y - 1) / blockSize.y);
   bgr2rgbTextureKernel<<<gridSize, blockSize>>>(texObj, d_output, width,
                                                 height);
-  timer->stop("Execute Cuda Kernel");
+  gpuTimer->stop("Execute Cuda Kernel");
 
-  timer->start("Transfer Device to Host Memory");
+  gpuTimer->start("Transfer Device to Host Memory");
   cudaMemcpy(result.data, d_output, numBytes, cudaMemcpyDeviceToHost);
-  timer->stop("Transfer Device to Host Memory");
+  gpuTimer->stop("Transfer Device to Host Memory");
 
-  timer->start("Wait For GPU Execution");
+  gpuTimer->start("Wait For GPU Execution");
   cudaDeviceSynchronize();
-  timer->stop("Wait For GPU Execution");
+  gpuTimer->stop("Wait For GPU Execution");
 
-  timer->start("Deallocate Device Memory");
+  gpuTimer->start("Deallocate Device Memory");
   cudaDestroyTextureObject(texObj);
   cudaFreeArray(cuArray);
   cudaFree(d_output);
-  timer->stop("Deallocate Device Memory");
+  gpuTimer->stop("Deallocate Device Memory");
 
-  timer->start("Restore Output Image");
+  gpuTimer->start("Restore Output Image");
   cv::cvtColor(result, result, cv::COLOR_BGRA2BGR);
-  timer->stop("Restore Output Image");
+  gpuTimer->stop("Restore Output Image");
 
   return result;
 }

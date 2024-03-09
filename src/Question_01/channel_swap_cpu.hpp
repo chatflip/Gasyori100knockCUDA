@@ -1,5 +1,5 @@
 #include <opencv2/opencv.hpp>
 
-#include "../Utils/TimerBase.h"
+#include "../Utils/TimerCpu.h"
 
-cv::Mat bgr2rgbCpu(cv::Mat image, std::shared_ptr<TimerBase> timer);
+cv::Mat bgr2rgbCpuInplace(cv::Mat image, std::shared_ptr<TimerCpu> timer);

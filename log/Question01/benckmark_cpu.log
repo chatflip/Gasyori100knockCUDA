@@ -1,7 +1,0 @@
-Question_01_cpu
-Build: Release
------------------------------------------
-Allocate Destination Memory 17.11 ms
-Execute Process 7.64 ms
------------------------------------------
-Elapsed time: 7.64 ms

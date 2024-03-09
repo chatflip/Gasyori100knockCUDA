@@ -1,0 +1,12 @@
+Question_01_gpu_thrust
+CPU: 
+GPU: 
+Build: Release
+-----------------------------------------
+Allocate And Transfer Memory 23.75 ms
+Async Execute Cuda Kernel 0.65 ms
+Async Transfer Device to Host Memory 21.08 ms
+Wait For GPU Execution 0.00 ms
+Allocate Result Memory 0.01 ms
+-----------------------------------------
+Elapsed time: 46.82 ms

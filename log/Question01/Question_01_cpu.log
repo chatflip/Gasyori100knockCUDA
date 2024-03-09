@@ -1,0 +1,9 @@
+Question_01_cpu
+CPU: Intel(R) Core(TM) i9-9900K CPU @ 3.60GHz
+GPU: 
+Build: Release
+-----------------------------------------
+Allocate Result Memory 17.79 ms
+Execute Image Processing 12.18 ms
+-----------------------------------------
+Elapsed time: 29.99 ms

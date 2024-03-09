@@ -1,7 +1,9 @@
 Tutorial
+CPU: 
+GPU: 
 Build: Release
 -----------------------------------------
-Allocate Destination Memory 0.01 ms
-Execute Process 0.03 ms
+Allocate Result Memory 24.14 ms
+Execute Image Processing 8.91 ms
 -----------------------------------------
-Elapsed time: 0.04 ms
+Elapsed time: 33.06 ms

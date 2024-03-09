@@ -6,7 +6,7 @@
 
 #include "Utils/TimerBase.h"
 #include "Utils/TimerCpu.h"
-#include "Utils/TimerGpu.h"
+#include "Utils/TimerGpu.cuh"
 
 enum class MatCompareResult {
   kMatch = 0,
@@ -18,6 +18,9 @@ enum class MatCompareResult {
 };
 
 class ImageProcessingTest : public ::testing::Test {
+ public:
+  static std::string getQuestionLogDir(int numQuestion);
+
  protected:
   static void SetUpTestCase(){};
   static void TearDownTestCase(){};
@@ -26,13 +29,16 @@ class ImageProcessingTest : public ::testing::Test {
   cv::Mat readAssetsImage(bool isLageImage = false) const;
   const std::string& getAssetImagePath(bool isLarge = false) const;
   std::string getCurrentTestName() const;
-  std::string getLogDir() const;
-  std::string getLogDir(int numQuestion) const;
+  std::string getGtestLogDir() const;
+
   MatCompareResult compareMat(const cv::Mat& actual,
                               const cv::Mat& desired) const;
   std::string createHeader(const std::string& testName) const;
 
-  std::shared_ptr<TimerBase> timer;
+  cv::Mat inputImage;
+  std::vector<std::string> ignoreNames;
+  const std::string actualProcessTimeName =
+      "Actual Image Processing Time on CPU";
 
  private:
   const std::string smallImagePath = "assets\\scene_small.jpg";

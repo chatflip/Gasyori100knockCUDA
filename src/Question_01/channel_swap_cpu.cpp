@@ -1,12 +1,11 @@
 #include "channel_swap_cpu.hpp"
 
-cv::Mat bgr2rgbCpu(cv::Mat image, std::shared_ptr<TimerBase> timer) {
-  timer->start("Allocate Destination Memory");
+cv::Mat bgr2rgbCpuInplace(cv::Mat image, std::shared_ptr<TimerCpu> timer) {
+  timer->start("Allocate Result Memory");
   cv::Mat result = image.clone();
-  timer->stop("Allocate Destination Memory");
+  timer->stop("Allocate Result Memory");
 
-  timer->start("Execute Process");
-  // in-place channel swap
+  timer->start("Execute Image Processing");
   int width = image.cols;
   int height = image.rows;
 
@@ -19,6 +18,6 @@ cv::Mat bgr2rgbCpu(cv::Mat image, std::shared_ptr<TimerBase> timer) {
       src[0][0] = tmp;
     }
   }
-  timer->stop("Execute Process");
+  timer->stop("Execute Image Processing");
   return result;
 }
