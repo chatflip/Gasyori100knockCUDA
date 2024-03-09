@@ -72,11 +72,11 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="src\Question_01\Question.md">
-      <Filter>src\Question_01</Filter>
-    </None>
-    <None Include="src\Tutorial\Question.md">
+    <None Include="src\Tutorial\README.md">
       <Filter>src\Tutorial</Filter>
+    </None>
+    <None Include="src\Question_01\README.md">
+      <Filter>src\Question_01</Filter>
     </None>
   </ItemGroup>
 </Project>
