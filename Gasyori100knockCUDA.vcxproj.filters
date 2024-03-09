@@ -38,9 +38,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <CudaCompile Include="src\kernel.cu">
-      <Filter>src</Filter>
-    </CudaCompile>
     <CudaCompile Include="src\Utils\TimerGpu.cu">
       <Filter>src\Utils</Filter>
     </CudaCompile>

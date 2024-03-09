@@ -20,7 +20,6 @@
     <ClCompile Include="src\Utils\TimerCpu.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <CudaCompile Include="src\kernel.cu" />
     <CudaCompile Include="src\Question_01\channel_swap_gpu.cu" />
     <CudaCompile Include="src\Utils\TimerGpu.cu" />
     <CudaCompile Include="src\Utils\UtilsCuda.cu" />
