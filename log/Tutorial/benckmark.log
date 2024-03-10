@@ -1,9 +1,9 @@
 Tutorial
-CPU: 
-GPU: 
+CPU Name: Intel(R) Core(TM) i9-9900K CPU @ 3.60GHz
+GPU Name: NVIDIA GeForce RTX 2080 Ti
 Build: Release
 -----------------------------------------
-Allocate Result Memory 24.14 ms
-Execute Image Processing 8.91 ms
+Allocate Result Memory 20.99 ms
+Execute Image Processing 9.25 ms
 -----------------------------------------
-Elapsed time: 33.06 ms
+Elapsed time: 30.25 ms
