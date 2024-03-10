@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup Label="UserMacros" />
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(SolutionDir)lib\hwinfo\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <AdditionalLibraryDirectories>$(SolutionDir)lib\hwinfo\lib\$(PlatformTarget)\$(PlatformToolset)\Release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>device.lib;device_static.lib;HWinfo.lib;miss-opencl.lib;miss-opencl_static.lib;OpenCL.lib;OpenCLExt.lib;;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+    <PostBuildEvent>
+      <Command>robocopy $(SolutionDir)lib\hwinfo\bin\$(PlatformTarget)\$(PlatformToolset)\Release $(OutDir) "*.dll" /fp /njs /njh /np /ns /ndl &amp; if %ERRORLEVEL% GEQ 8 (exit 1) else (exit 0)</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemGroup />
+</Project>
