@@ -1,8 +1,6 @@
 #pragma once
 
-#pragma comment(lib, "wbemuuid.lib")
-#include <Wbemidl.h>
-#include <comdef.h>
+#include <hwinfo/hwinfo.h>
 
 #include <fstream>
 #include <iomanip>
@@ -32,8 +30,4 @@ class TimerBase {
  protected:
   std::unordered_map<std::string, bool> started, stopped;
   std::unordered_map<std::string, float> records;
-
- private:
-  std::string getWMIInfo(const std::string& wmiClass,
-                         const std::string& property) const;
 };
