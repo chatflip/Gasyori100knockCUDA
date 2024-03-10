@@ -5,15 +5,9 @@ std::string TimerBase::createHeader(const std::string& testName) const {
   header << testName << std::endl;
   auto cpus = hwinfo::getAllCPUs();
   auto gpus = hwinfo::getAllGPUs();
+  header << "CPU Name: " << cpus.at(0).modelName() << std::endl;
+  header << "GPU Name: " << gpus.at(0).name() << std::endl;
 
-  std::string cpuName = cpus.at(0).modelName();
-  std::string gpuName = gpus.at(0).name();
-  header << "CPU Name: " << cpuName << std::endl;
-  header << "GPU Name: " << gpuName << std::endl;
-
-  std::cout << gpus.at(0).num_cores() << std::endl;
-
-  std::string buildType = "";
 #if _DEBUG
   header << "Build: Debug" << std::endl;
 #else
