@@ -150,7 +150,6 @@ cv::Mat bgr2rgbGpuTexture(cv::Mat image, cudaStream_t stream,
   cpuTimer->start("Allocate Result Memory");
   int width = image.cols;
   int height = image.rows;
-  size_t numBytes = sizeof(uchar4) * width * height;
   cv::Mat result(height, width, CV_8UC4);
   cpuTimer->stop("Allocate Result Memory");
 
@@ -164,8 +163,9 @@ cv::Mat bgr2rgbGpuTexture(cv::Mat image, cudaStream_t stream,
   cudaChannelFormatDesc channelDesc = cudaCreateChannelDesc<uchar4>();
   cudaMallocArray(&cuArray, &channelDesc, width, height);
   uchar4* d_output;
-  cudaMalloc(&d_output, numBytes);
-  gpuTimer->stop("Allocate Device Memory");
+  size_t numBytes = sizeof(uchar4) * width * height;
+  cudaMallocAsync(&d_output, numBytes, stream);
+  gpuTimer->stop("Allocate Device Memory", stream, false);
 
   gpuTimer->start("Transfer Host to Device");
   cudaMemcpyToArray(cuArray, 0, 0, inputBGRA.data, inputBGRA.step * height,
@@ -192,25 +192,29 @@ cv::Mat bgr2rgbGpuTexture(cv::Mat image, cudaStream_t stream,
 
   gpuTimer->start("Execute Cuda Kernel");
   dim3 blockSize(16, 16);
+  size_t sharedMemSizeByte = 0;
   dim3 gridSize((width + blockSize.x - 1) / blockSize.x,
                 (height + blockSize.y - 1) / blockSize.y);
-  bgr2rgbTextureKernel<<<gridSize, blockSize>>>(texObj, d_output, width,
-                                                height);
+  bgr2rgbTextureKernel<<<gridSize, blockSize, sharedMemSizeByte, stream>>>(
+      texObj, d_output, width, height);
   gpuTimer->stop("Execute Cuda Kernel");
 
   gpuTimer->start("Transfer Device to Host Memory");
-  cudaMemcpy(result.data, d_output, numBytes, cudaMemcpyDeviceToHost);
-  gpuTimer->stop("Transfer Device to Host Memory");
-
-  gpuTimer->start("Wait For GPU Execution");
-  cudaDeviceSynchronize();
-  gpuTimer->stop("Wait For GPU Execution");
+  cudaMemcpyAsync(result.data, d_output, numBytes, cudaMemcpyDeviceToHost,
+                  stream);
+  gpuTimer->stop("Transfer Device to Host Memory", stream, false);
 
   gpuTimer->start("Deallocate Device Memory");
   cudaDestroyTextureObject(texObj);
   cudaFreeArray(cuArray);
-  cudaFree(d_output);
+  cudaFreeAsync(d_output, stream);
   gpuTimer->stop("Deallocate Device Memory");
+
+  gpuTimer->start("Wait For GPU Execution");
+  cudaStreamSynchronize(stream);
+  cudaDeviceSynchronize();
+  cudaStreamDestroy(stream);
+  gpuTimer->stop("Wait For GPU Execution");
 
   gpuTimer->start("Restore Output Image");
   cv::cvtColor(result, result, cv::COLOR_BGRA2BGR);

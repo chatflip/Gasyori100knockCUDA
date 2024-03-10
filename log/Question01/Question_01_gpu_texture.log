@@ -1,17 +1,17 @@
 Question_01_gpu_texture
-CPU: 
+CPU: Intel(R) Core(TM) i9-9900K CPU @ 3.60GHz
 GPU: 
 Build: Release
 -----------------------------------------
-Optimize Input Image For Texture Memory 18.31 ms
-Allocate Device Memory 8.72 ms
-Transfer Host to Device 17.37 ms
+Optimize Input Image For Texture Memory 13.66 ms
+Allocate Device Memory 11.54 ms
+Transfer Host to Device 15.84 ms
 Create Texture Memory 0.04 ms
-Execute Cuda Kernel 0.80 ms
-Transfer Device to Host Memory 29.54 ms
-Deallocate Device Memory 2.44 ms
-Wait For GPU Execution 0.01 ms
-Restore Output Image 46.60 ms
-Allocate Result Memory 0.02 ms
+Execute Cuda Kernel 2.34 ms
+Transfer Device to Host Memory 29.73 ms
+Deallocate Device Memory 0.42 ms
+Wait For GPU Execution 0.04 ms
+Restore Output Image 47.61 ms
+Allocate Result Memory 0.01 ms
 -----------------------------------------
-Elapsed time: 129.25 ms
+Elapsed time: 132.79 ms
