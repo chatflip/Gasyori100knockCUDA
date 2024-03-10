@@ -1,8 +1,17 @@
 #include "ImageProcessingTest.h"
 
-void ImageProcessingTest::SetUp() {}
+void ImageProcessingTest::SetUp() {
+  inputImage = readAssetsImage(true);
+  ignoreNames.push_back(actualProcessTimeName);
+}
 
-void ImageProcessingTest::TearDown() {}
+void ImageProcessingTest::TearDown() { ignoreNames.clear(); }
+
+std::string ImageProcessingTest::getQuestionLogDir(int numQuestion) {
+  std::string outputDir = std::format("log\\Question{:02d}", numQuestion);
+  std::filesystem::create_directories(outputDir);
+  return outputDir;
+};
 
 const std::string& ImageProcessingTest::getAssetImagePath(bool isLarge) const {
   return isLarge ? largeImagePath : smallImagePath;
@@ -19,8 +28,8 @@ std::string ImageProcessingTest::getCurrentTestName() const {
   return testInfo->name();
 };
 
-std::string ImageProcessingTest::getOutputDir() const {
-  std::string outputDir = std::format("output\\{}", getCurrentTestName());
+std::string ImageProcessingTest::getGtestLogDir() const {
+  std::string outputDir = std::format("log\\{}", getCurrentTestName());
   std::filesystem::create_directories(outputDir);
   return outputDir;
 };
@@ -33,6 +42,9 @@ MatCompareResult ImageProcessingTest::compareMat(const cv::Mat& actual,
   }
   if (actual.type() != desired.type()) {
     return kTypeMismatch;
+  }
+  if (actual.channels() != desired.channels()) {
+    return kChannelMismatch;
   }
   cv::Mat diff;
   std::vector<cv::Mat> diffChannels;

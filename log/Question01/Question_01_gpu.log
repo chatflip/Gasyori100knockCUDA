@@ -1,0 +1,14 @@
+Question_01_gpu
+CPU: 
+GPU: 
+Build: Release
+-----------------------------------------
+Async Allocate Device Memory 11.00 ms
+Async Transfer Host to Device 13.20 ms
+Async Execute Cuda Kernel 2.17 ms
+Async Transfer Device to Host Memory 12.27 ms
+Async Deallocate Device Memory 0.02 ms
+Wait For GPU Execution 0.75 ms
+Allocate Result Memory 29.97 ms
+-----------------------------------------
+Elapsed time: 69.68 ms

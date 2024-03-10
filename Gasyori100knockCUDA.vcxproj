@@ -20,9 +20,9 @@
     <ClCompile Include="src\Utils\TimerCpu.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <CudaCompile Include="src\kernel.cu" />
     <CudaCompile Include="src\Question_01\channel_swap_gpu.cu" />
     <CudaCompile Include="src\Utils\TimerGpu.cu" />
+    <CudaCompile Include="src\Utils\UtilsCuda.cu" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\ImageProcessingTest.h" />
@@ -30,10 +30,12 @@
     <ClInclude Include="src\Question_01\channel_swap_gpu.cuh" />
     <ClInclude Include="src\Utils\TimerBase.h" />
     <ClInclude Include="src\Utils\TimerCpu.h" />
-    <ClInclude Include="src\Utils\TimerGpu.h" />
+    <ClInclude Include="src\Utils\TimerGpu.cuh" />
+    <ClInclude Include="src\Utils\UtilsCuda.cuh" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="src\Question_01\Question.md" />
+    <None Include="src\Question_01\README.md" />
+    <None Include="src\Tutorial\README.md" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{B3CF37C6-D641-4A3C-B334-85CF40E4DD6B}</ProjectGuid>

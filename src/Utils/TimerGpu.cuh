@@ -8,9 +8,12 @@ class TimerGpu : public TimerBase {
   TimerGpu();
   ~TimerGpu();
   void start(const std::string& name) override;
+  void start(const std::string& name, cudaStream_t stream);
   void stop(const std::string& name) override;
+  void stop(const std::string& name, cudaStream_t stream,
+            bool syncEvent = true);
   void reset() override;
-  double elapsedMilliseconds(const std::string& name) const;
+  void recordAll() override;
 
  private:
   void checkError(cudaError_t result, const std::string& action) const;

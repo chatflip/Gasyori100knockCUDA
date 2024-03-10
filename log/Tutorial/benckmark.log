@@ -1,0 +1,9 @@
+Tutorial
+CPU: 
+GPU: 
+Build: Release
+-----------------------------------------
+Allocate Result Memory 24.14 ms
+Execute Image Processing 8.91 ms
+-----------------------------------------
+Elapsed time: 33.06 ms

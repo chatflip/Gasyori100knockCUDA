@@ -14,6 +14,7 @@ void TimerCpu::reset() {
   stopped.clear();
   startTimes.clear();
   endTimes.clear();
+  records.clear();
 }
 
 void TimerCpu::start(const std::string& name) {
@@ -27,28 +28,41 @@ void TimerCpu::stop(const std::string& name) {
   QueryPerformanceCounter(&endTimes[name]);
 }
 
-double TimerCpu::elapsedMilliseconds(const std::string& name) const {
-  if (started.count(name) == 0) {
-    std::cerr << "Timer Error: " << name << " has not been started."
-              << std::endl;
-    return -1.0;
-  }
+void TimerCpu::recordAll() {
+  auto it = started.begin();
+  while (it != started.end()) {
+    std::string name = it->first;
+    if (started.count(name) == 0) {
+      std::cerr << "Timer Error: " << name << " has not been started."
+                << std::endl;
+      it++;
+      continue;
+    }
 
-  if (stopped.count(name) == 0) {
-    std::cerr << "Timer Error: " << name << " has not been stopped."
-              << std::endl;
-    return -1.0;
-  }
+    if (stopped.count(name) == 0) {
+      std::cerr << "Timer Error: " << name << " has not been stopped."
+                << std::endl;
+      it++;
+      continue;
+    }
 
-  if (!started.at(name) || !stopped.at(name)) {
-    std::cerr << "Timer Error: " << name
-              << "Start and stop must be called before getting elapsed time."
-              << std::endl;
-    return 0.0f;
-  }
+    if (!started.at(name) || !stopped.at(name)) {
+      std::cerr << "Timer Error:" << name
+                << " Start and stop must be called before getting elapsed time."
+                << std::endl;
+      it++;
+      continue;
+    }
 
-  double interval = static_cast<double>(endTimes.at(name).QuadPart -
-                                        startTimes.at(name).QuadPart) /
-                    static_cast<double>(frequency.QuadPart);
-  return 1e3 * interval;
+    double interval = static_cast<double>(endTimes.at(name).QuadPart -
+                                          startTimes.at(name).QuadPart) /
+                      static_cast<double>(frequency.QuadPart);
+    float milliseconds = 1e3 * interval;
+    records[name] = milliseconds;
+
+    it = started.erase(it);
+    stopped.erase(name);
+    startTimes.erase(name);
+    endTimes.erase(name);
+  }
 }

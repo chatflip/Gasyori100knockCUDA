@@ -38,14 +38,14 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <CudaCompile Include="src\kernel.cu">
-      <Filter>src</Filter>
-    </CudaCompile>
     <CudaCompile Include="src\Utils\TimerGpu.cu">
       <Filter>src\Utils</Filter>
     </CudaCompile>
     <CudaCompile Include="src\Question_01\channel_swap_gpu.cu">
       <Filter>src\Question_01</Filter>
+    </CudaCompile>
+    <CudaCompile Include="src\Utils\UtilsCuda.cu">
+      <Filter>src\Utils</Filter>
     </CudaCompile>
   </ItemGroup>
   <ItemGroup>
@@ -53,9 +53,6 @@
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="src\Utils\TimerCpu.h">
-      <Filter>src\Utils</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Utils\TimerGpu.h">
       <Filter>src\Utils</Filter>
     </ClInclude>
     <ClInclude Include="src\Utils\TimerBase.h">
@@ -67,9 +64,18 @@
     <ClInclude Include="src\Question_01\channel_swap_gpu.cuh">
       <Filter>src\Question_01</Filter>
     </ClInclude>
+    <ClInclude Include="src\Utils\UtilsCuda.cuh">
+      <Filter>src\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Utils\TimerGpu.cuh">
+      <Filter>src\Utils</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="src\Question_01\Question.md">
+    <None Include="src\Tutorial\README.md">
+      <Filter>src\Tutorial</Filter>
+    </None>
+    <None Include="src\Question_01\README.md">
       <Filter>src\Question_01</Filter>
     </None>
   </ItemGroup>

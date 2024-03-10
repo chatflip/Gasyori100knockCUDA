@@ -1,38 +1,42 @@
 #include "../ImageProcessingTest.h"
 
-cv::Mat drawRedLeftTopHalf(cv::Mat image, std::shared_ptr<TimerBase> timer) {
-  timer->start("Allocate Destination Memory");
+namespace {
+cv::Mat drawRedLeftTopHalf(cv::Mat image, std::shared_ptr<TimerCpu> timer) {
+  timer->start("Allocate Result Memory");
   cv::Mat result = image.clone();
-  timer->stop("Allocate Destination Memory");
+  timer->stop("Allocate Result Memory");
 
-  timer->start("Execute Process");
+  timer->start("Execute Image Processing");
   int width = image.cols;
   int height = image.rows;
   for (int j = 0; j < height / 2; j++) {
     for (int i = 0; i < width / 2; i++) {
-      unsigned char tmp = result.at<cv::Vec3b>(j, i)[0];
-      result.at<cv::Vec3b>(j, i)[0] = result.at<cv::Vec3b>(j, i)[2];
-      result.at<cv::Vec3b>(j, i)[2] = tmp;
+      cv::Vec3b *src = result.ptr<cv::Vec3b>(j, i);
+      uchar tmp = src[0][2];
+      src[0][2] = src[0][0];
+      src[0][0] = tmp;
     }
   }
-  timer->stop("Execute Process");
+  timer->stop("Execute Image Processing");
   return result;
 }
+}  // namespace
 
 TEST_F(ImageProcessingTest, Tutorial) {
-  std::vector<std::string> ignoreNames = {"Allocate Destination Memory"};
-  std::shared_ptr<TimerBase> timer = std::make_shared<TimerCpu>();
+  std::shared_ptr<TimerCpu> cpuTimer = std::make_shared<TimerCpu>();
 
-  cv::Mat image = readAssetsImage();
-  cv::Mat result = drawRedLeftTopHalf(image, timer);
+  cpuTimer->start(actualProcessTimeName);
+  cv::Mat result = drawRedLeftTopHalf(inputImage, cpuTimer);
+  cpuTimer->stop(actualProcessTimeName);
+  cpuTimer->recordAll();
+  float elapsedTime = cpuTimer->getRecord(actualProcessTimeName);
+  cpuTimer->popRecord(actualProcessTimeName);
 
-  float elapsedTime = timer->calculateTotal(ignoreNames);
-  std::string header = timer->createHeader(getCurrentTestName());
-  std::string footer = timer->createFooter(elapsedTime);
-
-  timer->print(header, footer);
-  std::string logPath = std::format("{}\\benckmark.txt", getOutputDir());
-  timer->writeToFile(logPath, header, footer);
+  std::string header = cpuTimer->createHeader(getCurrentTestName());
+  std::string footer = cpuTimer->createFooter(elapsedTime);
+  std::string logPath = std::format("{}\\benckmark.log", getGtestLogDir());
+  cpuTimer->writeToFile(logPath, header, footer);
+  cpuTimer->print(header, footer);
 
   SUCCEED();
 }
