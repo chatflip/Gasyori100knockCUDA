@@ -3,7 +3,7 @@ CPU Name: Intel(R) Core(TM) i9-9900K CPU @ 3.60GHz
 GPU Name: NVIDIA GeForce RTX 2080 Ti
 Build: Release
 -----------------------------------------
-Allocate Result Memory 17.14 ms
-Execute Image Processing 8.94 ms
+Allocate Result Memory 21.38 ms
+Execute Image Processing 11.83 ms
 -----------------------------------------
-Elapsed time: 26.09 ms
+Elapsed time: 33.21 ms

@@ -3,15 +3,15 @@ CPU Name: Intel(R) Core(TM) i9-9900K CPU @ 3.60GHz
 GPU Name: NVIDIA GeForce RTX 2080 Ti
 Build: Release
 -----------------------------------------
-Optimize Input Image For Texture Memory 13.04 ms
-Allocate Device Memory 8.96 ms
-Transfer Host to Device 16.40 ms
+Optimize Input Image For Texture Memory 13.17 ms
+Allocate Device Memory 8.75 ms
+Transfer Host to Device 14.55 ms
 Create Texture Memory 0.04 ms
-Execute Cuda Kernel 0.93 ms
-Transfer Device to Host Memory 25.66 ms
-Deallocate Device Memory 0.48 ms
+Execute Cuda Kernel 0.89 ms
+Transfer Device to Host Memory 24.51 ms
+Deallocate Device Memory 0.98 ms
 Wait For GPU Execution 0.02 ms
-Restore Output Image 45.61 ms
+Restore Output Image 51.48 ms
 Allocate Result Memory 0.02 ms
 -----------------------------------------
-Elapsed time: 119.06 ms
+Elapsed time: 121.92 ms
