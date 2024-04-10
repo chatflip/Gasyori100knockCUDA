@@ -33,7 +33,6 @@ class ImageProcessingTest : public ::testing::Test {
 
   MatCompareResult compareMat(const cv::Mat& actual,
                               const cv::Mat& desired) const;
-  std::string createHeader(const std::string& testName) const;
 
   cv::Mat inputImage;
   std::vector<std::string> ignoreNames;
