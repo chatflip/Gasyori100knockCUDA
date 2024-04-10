@@ -4,9 +4,9 @@
 #include <filesystem>
 #include <opencv2/opencv.hpp>
 
-#include "Utils/TimerBase.h"
-#include "Utils/TimerCpu.h"
-#include "Utils/TimerGpu.cuh"
+#include "Utils/TimerBase.hpp"
+#include "Utils/TimerCpu.hpp"
+#include "Utils/TimerGpu.hpp"
 
 enum class MatCompareResult {
   kMatch = 0,

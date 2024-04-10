@@ -1,7 +1,7 @@
 #pragma once
 #include <windows.h>
 
-#include "TimerBase.h"
+#include "TimerBase.hpp"
 
 class TimerCpu : public TimerBase {
  public:

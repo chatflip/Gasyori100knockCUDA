@@ -1,4 +1,4 @@
-#include "ImageProcessingTest.h"
+#include "ImageProcessingTest.hpp"
 
 void ImageProcessingTest::SetUp() {
   inputImage = readAssetsImage(true);

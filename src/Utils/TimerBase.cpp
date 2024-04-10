@@ -1,4 +1,4 @@
-#include "TimerBase.h"
+#include "TimerBase.hpp"
 
 std::string TimerBase::createHeader(const std::string& testName) const {
   std::ostringstream header;

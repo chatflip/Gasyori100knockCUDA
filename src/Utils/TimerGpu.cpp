@@ -1,4 +1,4 @@
-#include "TimerGpu.cuh"
+#include "TimerGpu.hpp"
 
 TimerGpu::TimerGpu() {}
 

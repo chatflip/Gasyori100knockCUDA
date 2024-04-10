@@ -24,51 +24,51 @@
     <ClCompile Include="src\Tutorial\Tutorial.cpp">
       <Filter>src\Tutorial</Filter>
     </ClCompile>
-    <ClCompile Include="src\Utils\TimerCpu.cpp">
-      <Filter>src\Utils</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Utils\TimerBase.cpp">
-      <Filter>src\Utils</Filter>
-    </ClCompile>
     <ClCompile Include="src\Question_01\Question_01.cpp">
       <Filter>src\Question_01</Filter>
     </ClCompile>
     <ClCompile Include="src\Question_01\channel_swap_cpu.cpp">
       <Filter>src\Question_01</Filter>
     </ClCompile>
+    <ClCompile Include="src\Utils\TimerBase.cpp">
+      <Filter>src\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Utils\TimerCpu.cpp">
+      <Filter>src\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Utils\TimerGpu.cpp">
+      <Filter>src\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Utils\UtilsCuda.cpp">
+      <Filter>src\Utils</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <CudaCompile Include="src\Utils\TimerGpu.cu">
-      <Filter>src\Utils</Filter>
-    </CudaCompile>
     <CudaCompile Include="src\Question_01\channel_swap_gpu.cu">
       <Filter>src\Question_01</Filter>
     </CudaCompile>
-    <CudaCompile Include="src\Utils\UtilsCuda.cu">
-      <Filter>src\Utils</Filter>
-    </CudaCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\ImageProcessingTest.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Utils\TimerCpu.h">
-      <Filter>src\Utils</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Utils\TimerBase.h">
-      <Filter>src\Utils</Filter>
-    </ClInclude>
     <ClInclude Include="src\Question_01\channel_swap_cpu.hpp">
       <Filter>src\Question_01</Filter>
     </ClInclude>
     <ClInclude Include="src\Question_01\channel_swap_gpu.cuh">
       <Filter>src\Question_01</Filter>
     </ClInclude>
-    <ClInclude Include="src\Utils\UtilsCuda.cuh">
+    <ClInclude Include="src\Utils\TimerBase.hpp">
       <Filter>src\Utils</Filter>
     </ClInclude>
-    <ClInclude Include="src\Utils\TimerGpu.cuh">
+    <ClInclude Include="src\Utils\TimerCpu.hpp">
       <Filter>src\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Utils\TimerGpu.hpp">
+      <Filter>src\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Utils\UtilsCuda.hpp">
+      <Filter>src\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ImageProcessingTest.hpp">
+      <Filter>src</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
