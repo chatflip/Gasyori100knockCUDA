@@ -3,6 +3,7 @@
 void ImageProcessingTest::SetUp() {
   inputImage = readAssetsImage(true);
   ignoreNames.push_back(actualProcessTimeName);
+  resourceManager = std::make_shared<CudaResourceManager>();
 }
 
 void ImageProcessingTest::TearDown() { ignoreNames.clear(); }

@@ -53,9 +53,11 @@ __global__ void bgr2rgbTextureKernel(cudaTextureObject_t texObj, uchar4* output,
   output[y * width + x] = rgbaValue;
 }
 
-cv::Mat bgr2rgbGpuInplace(cv::Mat image, std::vector<cudaStream_t> streams,
-                          std::shared_ptr<TimerCpu> cpuTimer,
-                          std::shared_ptr<TimerGpu> gpuTimer) {
+cv::Mat bgr2rgbGpuMultiStream(
+    cv::Mat image, std::shared_ptr<CudaResourceManager> resourceManager,
+    std::shared_ptr<TimerCpu> cpuTimer, std::shared_ptr<TimerGpu> gpuTimer) {
+  std::vector<cudaStream_t> streams = resourceManager->getStreams();
+
   cpuTimer->start("Allocate Result Memory");
   cv::Mat result = image.clone();
   cpuTimer->stop("Allocate Result Memory");
@@ -82,8 +84,8 @@ cv::Mat bgr2rgbGpuInplace(cv::Mat image, std::vector<cudaStream_t> streams,
 
   gpuTimer->start("Async Execute Cuda Kernel", streams.at(0));
   size_t sharedMemSizeByte = 0;
-  bgr2rgbInplaceKernel<<<gridSize, blockSize, sharedMemSizeByte, streams.at(0)>>>(
-      d_input, width, height);
+  bgr2rgbInplaceKernel<<<gridSize, blockSize, sharedMemSizeByte,
+                         streams.at(0)>>>(d_input, width, height);
   gpuTimer->stop("Async Execute Cuda Kernel", streams.at(0), false);
 
   gpuTimer->start("Async Transfer Device to Host Memory", streams.at(0));
@@ -103,9 +105,12 @@ cv::Mat bgr2rgbGpuInplace(cv::Mat image, std::vector<cudaStream_t> streams,
   return result;
 }
 
-cv::Mat bgr2rgbGpuThrust(cv::Mat image, std::vector<cudaStream_t> streams,
+cv::Mat bgr2rgbGpuThrust(cv::Mat image,
+                         std::shared_ptr<CudaResourceManager> resourceManager,
                          std::shared_ptr<TimerCpu> cpuTimer,
                          std::shared_ptr<TimerGpu> gpuTimer) {
+  std::vector<cudaStream_t> streams = resourceManager->getStreams();
+
   cpuTimer->start("Allocate Result Memory");
   int width = image.cols;
   int height = image.rows;
@@ -145,9 +150,12 @@ cv::Mat bgr2rgbGpuThrust(cv::Mat image, std::vector<cudaStream_t> streams,
   return result;
 }
 
-cv::Mat bgr2rgbGpuTexture(cv::Mat image, std::vector<cudaStream_t> streams,
+cv::Mat bgr2rgbGpuTexture(cv::Mat image,
+                          std::shared_ptr<CudaResourceManager> resourceManager,
                           std::shared_ptr<TimerCpu> cpuTimer,
                           std::shared_ptr<TimerGpu> gpuTimer) {
+  std::vector<cudaStream_t> streams = resourceManager->getStreams();
+
   cpuTimer->start("Allocate Result Memory");
   int width = image.cols;
   int height = image.rows;
@@ -197,8 +205,7 @@ cv::Mat bgr2rgbGpuTexture(cv::Mat image, std::vector<cudaStream_t> streams,
   dim3 gridSize((width + blockSize.x - 1) / blockSize.x,
                 (height + blockSize.y - 1) / blockSize.y);
   bgr2rgbTextureKernel<<<gridSize, blockSize, sharedMemSizeByte,
-                         streams.at(0)>>>(
-      texObj, d_output, width, height);
+                         streams.at(0)>>>(texObj, d_output, width, height);
   gpuTimer->stop("Execute Cuda Kernel");
 
   gpuTimer->start("Transfer Device to Host Memory");

@@ -39,7 +39,7 @@
     <ClCompile Include="src\Utils\TimerGpu.cpp">
       <Filter>src\Utils</Filter>
     </ClCompile>
-    <ClCompile Include="src\Utils\UtilsCuda.cpp">
+    <ClCompile Include="src\Utils\CudaResourceManager.cpp">
       <Filter>src\Utils</Filter>
     </ClCompile>
   </ItemGroup>
@@ -64,11 +64,11 @@
     <ClInclude Include="src\Utils\TimerGpu.hpp">
       <Filter>src\Utils</Filter>
     </ClInclude>
-    <ClInclude Include="src\Utils\UtilsCuda.hpp">
-      <Filter>src\Utils</Filter>
-    </ClInclude>
     <ClInclude Include="src\ImageProcessingTest.hpp">
       <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Utils\CudaResourceManager.hpp">
+      <Filter>src\Utils</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
