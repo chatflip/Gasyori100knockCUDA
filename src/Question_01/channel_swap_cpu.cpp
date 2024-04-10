@@ -8,8 +8,7 @@ cv::Mat bgr2rgbCpuInplace(cv::Mat image, std::shared_ptr<TimerCpu> timer) {
   timer->start("Execute Image Processing");
   int width = image.cols;
   int height = image.rows;
-
-#pragma omp parallel for
+#pragma omp parallel for collapse(2)
   for (int j = 0; j < height; j++) {
     for (int i = 0; i < width; i++) {
       cv::Vec3b *src = result.ptr<cv::Vec3b>(j, i);
