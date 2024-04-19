@@ -40,8 +40,9 @@ TEST_F(ImageProcessingTest, Question_01_gpu) {
   std::shared_ptr<TimerGpu> gpuTimer = std::make_shared<TimerGpu>();
 
   cpuTimer->start(actualProcessTimeName);
-  cv::Mat resultGpu =
-      bgr2rgbGpuInplace(inputImage, resourceManager, cpuTimer, gpuTimer);
+  int numStreams = 8;
+  cv::Mat resultGpu = bgr2rgbGpuMultiStream(
+      inputImage, numStreams, resourceManager, cpuTimer, gpuTimer);
   cpuTimer->stop(actualProcessTimeName);
   cpuTimer->recordAll();
   float elapsedTime = cpuTimer->getRecord(actualProcessTimeName);

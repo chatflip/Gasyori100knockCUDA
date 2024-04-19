@@ -12,13 +12,17 @@
 __global__ void bgr2rgbKernel(uchar* input, uchar* output, int width,
                               int height);
 
+__global__ void bgr2rgbMultiStreamKernel(uchar* input, uchar* output, int width,
+                                         int height, int streamIdx, int numStreams);
+
 __global__ void bgr2rgbInplaceKernel(uchar* input, int width, int height);
 
 __global__ void bgr2rgbTextureKernel(cudaTextureObject_t texObj, uchar4* output,
                                      int width, int height);
 
 cv::Mat bgr2rgbGpuMultiStream(
-    cv::Mat image, std::shared_ptr<CudaResourceManager> resourceManager,
+    cv::Mat image, int numStreams,
+    std::shared_ptr<CudaResourceManager> resourceManager,
     std::shared_ptr<TimerCpu> cpuTimer, std::shared_ptr<TimerGpu> gpuTimer);
 
 cv::Mat bgr2rgbGpuThrust(cv::Mat image,

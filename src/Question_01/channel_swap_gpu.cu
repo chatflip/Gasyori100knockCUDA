@@ -20,6 +20,20 @@ __global__ void bgr2rgbKernel(uchar* input, uchar* output, int width,
   output[idx + 2] = B;
 }
 
+__global__ void bgr2rgbMultiStreamKernel(uchar* input, uchar* output, int width,
+                                         int height, int streamIdx,
+                                         int numStreams) {
+  int x = blockIdx.x * blockDim.x + threadIdx.x;
+  int y = blockIdx.y * blockDim.y + threadIdx.y;
+  if (x >= width || y >= height) return;
+
+  // BGR to RGB (simply swap B and R channels)
+  int idx = (y * width + x) * 3;  // 3 channels
+  output[idx] = input[idx + 2];
+  output[idx + 1] = input[idx + 1];
+  output[idx + 2] = input[idx + 0];
+}
+
 __global__ void bgr2rgbInplaceKernel(uchar* input, int width, int height) {
   int x = blockIdx.x * blockDim.x + threadIdx.x;
   int y = blockIdx.y * blockDim.y + threadIdx.y;
@@ -54,54 +68,85 @@ __global__ void bgr2rgbTextureKernel(cudaTextureObject_t texObj, uchar4* output,
 }
 
 cv::Mat bgr2rgbGpuMultiStream(
-    cv::Mat image, std::shared_ptr<CudaResourceManager> resourceManager,
+    cv::Mat image, int numStreams,
+    std::shared_ptr<CudaResourceManager> resourceManager,
     std::shared_ptr<TimerCpu> cpuTimer, std::shared_ptr<TimerGpu> gpuTimer) {
-  std::vector<cudaStream_t> streams = resourceManager->getStreams();
+  std::vector<cudaStream_t> streams = resourceManager->getStreams(numStreams);
 
   cpuTimer->start("Allocate Result Memory");
-  cv::Mat result = image.clone();
-  cpuTimer->stop("Allocate Result Memory");
-
-  gpuTimer->start("Async Allocate Device Memory", streams.at(0));
   int width = image.cols;
   int height = image.rows;
-  uchar* d_input;
-  size_t numTensor = width * height * image.channels();
-  size_t numBytes = sizeof(uchar) * numTensor;
-  // Allocate memory on gpu
-  cudaMallocAsync(&d_input, numBytes, streams.at(0));
-  gpuTimer->stop("Async Allocate Device Memory", streams.at(0), false);
+  cv::Mat result(height, width, image.type());
+  cpuTimer->stop("Allocate Result Memory");
 
-  gpuTimer->start("Async Transfer Host to Device", streams.at(0));
-  // copy host(cpu) to device(gpu)
-  cudaMemcpyAsync(d_input, image.data, numBytes, cudaMemcpyHostToDevice,
-                  streams.at(0));
-  gpuTimer->stop("Async Transfer Host to Device", streams.at(0), false);
+  cpuTimer->start("Prepare Async Streams");
+  // Since d_inputs is on the device, it cannot be freed by the destructor of
+  // shared_ptr. Therefore, there is no advantage to use shared_ptr, so it is
+  // managed by vector
+  std::vector<uchar*> d_inputs, d_outputs;
+  int rowsPerStream = height / numStreams;
+  int bytesPerRow = width * image.channels() * sizeof(uchar);
+  int bytesPerStream = rowsPerStream * bytesPerRow;
+  cpuTimer->stop("Prepare Async Streams");
 
+  for (int i = 0; i < numStreams; i++) {
+    gpuTimer->start("Async Allocate Device Memory", streams.at(i));
+    uchar *d_input, *d_output;
+    cudaMallocAsync(&d_input, bytesPerStream, streams.at(i));
+    cudaMallocAsync(&d_output, bytesPerStream, streams.at(i));
+    d_inputs.push_back(d_input);
+    d_outputs.push_back(d_output);
+    gpuTimer->stop("Async Allocate Device Memory", streams.at(i), false);
+  }
+
+  // Transfer host to device
+  for (int i = 0; i < numStreams; i++) {
+    gpuTimer->start("Async Transfer Host to Device", streams.at(i));
+    int offset = i * rowsPerStream * bytesPerRow;
+    cudaMemcpyAsync(d_inputs.at(i), image.data + offset, bytesPerStream,
+                    cudaMemcpyHostToDevice, streams.at(i));
+    gpuTimer->stop("Async Transfer Host to Device", streams.at(i), false);
+  }
+
+  // Execute kernel
   dim3 blockSize(16, 16);
-  dim3 gridSize((width + blockSize.x - 1) / blockSize.x,
-                (height + blockSize.y - 1) / blockSize.y);
-
-  gpuTimer->start("Async Execute Cuda Kernel", streams.at(0));
   size_t sharedMemSizeByte = 0;
-  bgr2rgbInplaceKernel<<<gridSize, blockSize, sharedMemSizeByte,
-                         streams.at(0)>>>(d_input, width, height);
-  gpuTimer->stop("Async Execute Cuda Kernel", streams.at(0), false);
+  for (int i = 0; i < numStreams; i++) {
+    gpuTimer->start("Async Execute Cuda Kernel", streams.at(i));
+    // Calculate the height of the current stream
+    // The last stream may have more rows than the other streams
+    int heightPerStream =
+        (i == numStreams - 1) ? height - i * rowsPerStream : rowsPerStream;
+    dim3 gridSize((width + blockSize.x - 1) / blockSize.x,
+                  (heightPerStream + blockSize.y - 1) / blockSize.y);
+    bgr2rgbMultiStreamKernel<<<gridSize, blockSize, sharedMemSizeByte,
+                               streams.at(i)>>>(
+        d_inputs.at(i), d_outputs.at(i), width, heightPerStream, i, numStreams);
+    gpuTimer->stop("Async Execute Cuda Kernel", streams.at(i), false);
+  }
 
-  gpuTimer->start("Async Transfer Device to Host Memory", streams.at(0));
-  cudaMemcpyAsync(result.data, d_input, numBytes, cudaMemcpyDeviceToHost,
-                  streams.at(0));
-  gpuTimer->stop("Async Transfer Device to Host Memory", streams.at(0), false);
+  // Transfer device to host
+  for (int i = 0; i < numStreams; i++) {
+    gpuTimer->start("Async Transfer Device to Host Memory", streams.at(i));
+    int offset = i * rowsPerStream * bytesPerRow;
+    cudaMemcpyAsync(result.data + offset, d_outputs.at(i), bytesPerStream,
+                    cudaMemcpyDeviceToHost, streams.at(i));
+    gpuTimer->stop("Async Transfer Device to Host Memory", streams.at(i),
+                   false);
+  }
 
-  gpuTimer->start("Async Deallocate Device Memory", streams.at(0));
-  cudaFreeAsync(d_input, streams.at(0));
-  gpuTimer->stop("Async Deallocate Device Memory", streams.at(0), false);
+  // Deallocate device memory
+  for (int i = 0; i < numStreams; i++) {
+    gpuTimer->start("Async Deallocate Device Memory", streams.at(i));
+    cudaFreeAsync(d_inputs.at(i), streams.at(i));
+    gpuTimer->stop("Async Deallocate Device Memory", streams.at(i), false);
+  }
 
   gpuTimer->start("Wait For GPU Execution");
-  cudaStreamSynchronize(streams.at(0));
-  cudaStreamDestroy(streams.at(0));
+  for (int i = 0; i < numStreams; i++) {
+    cudaStreamSynchronize(streams.at(i));
+  }
   gpuTimer->stop("Wait For GPU Execution");
-
   return result;
 }
 
