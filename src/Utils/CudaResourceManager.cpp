@@ -9,6 +9,7 @@ CudaResourceManager::CudaResourceManager() {
         << std::endl;
     exit(1);
   }
+  streams = createCudaStreams(maxStreams);
 }
 
 CudaResourceManager::~CudaResourceManager() {
@@ -18,11 +19,21 @@ CudaResourceManager::~CudaResourceManager() {
   }
 }
 
-std::vector<cudaStream_t> CudaResourceManager::getStreams(int numStreams) {
+std::vector<cudaStream_t> CudaResourceManager::createCudaStreams(
+    int numStreams) {
+  std::vector<cudaStream_t> cudaStreams;
   for (int i = 0; i < numStreams; i++) {
     cudaStream_t stream;
     cudaStreamCreate(&stream);
-    streams.push_back(stream);
+    cudaStreams.push_back(stream);
   }
-  return streams;
+  return cudaStreams;
+}
+
+std::vector<cudaStream_t> CudaResourceManager::getStreams(int numStreams) {
+  std::vector<cudaStream_t> cudaStreams;
+  for (int i = 0; i < numStreams; i++) {
+    cudaStreams.push_back(streams.at(i));
+  }
+  return cudaStreams;
 }
