@@ -1,6 +1,5 @@
 #include "../ImageProcessingTest.hpp"
-#include "channel_swap_cpu.hpp"
-#include "channel_swap_gpu.cuh"
+#include "channel_swap.cuh"
 
 namespace {
 int numQuestions = 1;
