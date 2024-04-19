@@ -1,7 +1,7 @@
 #pragma once
 #include <cuda_runtime.h>
 
-#include "TimerBase.h"
+#include "TimerBase.hpp"
 
 class TimerGpu : public TimerBase {
  public:

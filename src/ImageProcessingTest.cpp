@@ -1,8 +1,9 @@
-#include "ImageProcessingTest.h"
+#include "ImageProcessingTest.hpp"
 
 void ImageProcessingTest::SetUp() {
   inputImage = readAssetsImage(true);
   ignoreNames.push_back(actualProcessTimeName);
+  resourceManager = std::make_shared<CudaResourceManager>();
 }
 
 void ImageProcessingTest::TearDown() { ignoreNames.clear(); }

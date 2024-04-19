@@ -1,4 +1,4 @@
-#include "TimerCpu.h"
+#include "TimerCpu.hpp"
 
 TimerCpu::TimerCpu() {
   if (!QueryPerformanceFrequency(&frequency)) {

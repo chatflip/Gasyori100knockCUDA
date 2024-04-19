@@ -1,7 +1,5 @@
-#include "../ImageProcessingTest.h"
-#include "../Utils/UtilsCuda.cuh"
-#include "channel_swap_cpu.hpp"
-#include "channel_swap_gpu.cuh"
+#include "../ImageProcessingTest.hpp"
+#include "channel_swap.cuh"
 
 namespace {
 int numQuestions = 1;
@@ -39,10 +37,11 @@ TEST_F(ImageProcessingTest, Question_01_gpu) {
   cv::Mat desiredImage = MakeQ1desiredMat(inputImage);
   std::shared_ptr<TimerCpu> cpuTimer = std::make_shared<TimerCpu>();
   std::shared_ptr<TimerGpu> gpuTimer = std::make_shared<TimerGpu>();
-  cudaStream_t stream = createCudaStream();
 
   cpuTimer->start(actualProcessTimeName);
-  cv::Mat resultGpu = bgr2rgbGpuInplace(inputImage, stream, cpuTimer, gpuTimer);
+  int numStreams = 8;
+  cv::Mat resultGpu = bgr2rgbGpuMultiStream(
+      inputImage, numStreams, resourceManager, cpuTimer, gpuTimer);
   cpuTimer->stop(actualProcessTimeName);
   cpuTimer->recordAll();
   float elapsedTime = cpuTimer->getRecord(actualProcessTimeName);
@@ -64,10 +63,10 @@ TEST_F(ImageProcessingTest, Question_01_gpu_thrust) {
   cv::Mat desiredImage = MakeQ1desiredMat(inputImage);
   std::shared_ptr<TimerCpu> cpuTimer = std::make_shared<TimerCpu>();
   std::shared_ptr<TimerGpu> gpuTimer = std::make_shared<TimerGpu>();
-  cudaStream_t stream = createCudaStream();
 
   cpuTimer->start(actualProcessTimeName);
-  cv::Mat resultGpu = bgr2rgbGpuThrust(inputImage, stream, cpuTimer, gpuTimer);
+  cv::Mat resultGpu =
+      bgr2rgbGpuThrust(inputImage, resourceManager, cpuTimer, gpuTimer);
   cpuTimer->stop(actualProcessTimeName);
   cpuTimer->recordAll();
   float elapsedTime = cpuTimer->getRecord(actualProcessTimeName);
@@ -89,10 +88,10 @@ TEST_F(ImageProcessingTest, Question_01_gpu_texture) {
   cv::Mat desiredImage = MakeQ1desiredMat(inputImage);
   std::shared_ptr<TimerCpu> cpuTimer = std::make_shared<TimerCpu>();
   std::shared_ptr<TimerGpu> gpuTimer = std::make_shared<TimerGpu>();
-  cudaStream_t stream = createCudaStream();
 
   cpuTimer->start(actualProcessTimeName);
-  cv::Mat resultGpu = bgr2rgbGpuTexture(inputImage, stream, cpuTimer, gpuTimer);
+  cv::Mat resultGpu =
+      bgr2rgbGpuTexture(inputImage, resourceManager, cpuTimer, gpuTimer);
   cpuTimer->stop(actualProcessTimeName);
   cpuTimer->recordAll();
   float elapsedTime = cpuTimer->getRecord(actualProcessTimeName);

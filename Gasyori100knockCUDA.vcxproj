@@ -13,25 +13,23 @@
   <ItemGroup>
     <ClCompile Include="src\ImageProcessingTest.cpp" />
     <ClCompile Include="src\main.cpp" />
-    <ClCompile Include="src\Question_01\channel_swap_cpu.cpp" />
     <ClCompile Include="src\Question_01\Question_01.cpp" />
     <ClCompile Include="src\Tutorial\Tutorial.cpp" />
+    <ClCompile Include="src\Utils\CudaResourceManager.cpp" />
     <ClCompile Include="src\Utils\TimerBase.cpp" />
     <ClCompile Include="src\Utils\TimerCpu.cpp" />
+    <ClCompile Include="src\Utils\TimerGpu.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <CudaCompile Include="src\Question_01\channel_swap_gpu.cu" />
-    <CudaCompile Include="src\Utils\TimerGpu.cu" />
-    <CudaCompile Include="src\Utils\UtilsCuda.cu" />
+    <CudaCompile Include="src\Question_01\channel_swap.cu" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\ImageProcessingTest.h" />
-    <ClInclude Include="src\Question_01\channel_swap_cpu.hpp" />
-    <ClInclude Include="src\Question_01\channel_swap_gpu.cuh" />
-    <ClInclude Include="src\Utils\TimerBase.h" />
-    <ClInclude Include="src\Utils\TimerCpu.h" />
-    <ClInclude Include="src\Utils\TimerGpu.cuh" />
-    <ClInclude Include="src\Utils\UtilsCuda.cuh" />
+    <ClInclude Include="src\ImageProcessingTest.hpp" />
+    <ClInclude Include="src\Question_01\channel_swap.cuh" />
+    <ClInclude Include="src\Utils\CudaResourceManager.hpp" />
+    <ClInclude Include="src\Utils\TimerBase.hpp" />
+    <ClInclude Include="src\Utils\TimerCpu.hpp" />
+    <ClInclude Include="src\Utils\TimerGpu.hpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="src\Question_01\README.md" />

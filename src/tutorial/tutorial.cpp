@@ -1,4 +1,4 @@
-#include "../ImageProcessingTest.h"
+#include "../ImageProcessingTest.hpp"
 
 namespace {
 cv::Mat drawRedLeftTopHalf(cv::Mat image, std::shared_ptr<TimerCpu> timer) {

@@ -4,9 +4,10 @@
 #include <filesystem>
 #include <opencv2/opencv.hpp>
 
-#include "Utils/TimerBase.h"
-#include "Utils/TimerCpu.h"
-#include "Utils/TimerGpu.cuh"
+#include "Utils/CudaResourceManager.hpp"
+#include "Utils/TimerBase.hpp"
+#include "Utils/TimerCpu.hpp"
+#include "Utils/TimerGpu.hpp"
 
 enum class MatCompareResult {
   kMatch = 0,
@@ -33,14 +34,14 @@ class ImageProcessingTest : public ::testing::Test {
 
   MatCompareResult compareMat(const cv::Mat& actual,
                               const cv::Mat& desired) const;
-  std::string createHeader(const std::string& testName) const;
 
   cv::Mat inputImage;
   std::vector<std::string> ignoreNames;
   const std::string actualProcessTimeName =
       "Actual Image Processing Time on CPU";
+  std::shared_ptr<CudaResourceManager> resourceManager;
 
- private:
-  const std::string smallImagePath = "assets\\scene_small.jpg";
+ private
+      : const std::string smallImagePath = "assets\\scene_small.jpg";
   const std::string largeImagePath = "assets\\scene_large.jpg";
 };
