@@ -41,7 +41,7 @@ class ImageProcessingTest : public ::testing::Test {
       "Actual Image Processing Time on CPU";
   std::shared_ptr<CudaResourceManager> resourceManager;
 
- private
-      : const std::string smallImagePath = "assets\\scene_small.jpg";
+ private:
+  const std::string smallImagePath = "assets\\scene_small.jpg";
   const std::string largeImagePath = "assets\\scene_large.jpg";
 };
