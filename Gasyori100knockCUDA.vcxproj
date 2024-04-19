@@ -33,6 +33,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="src\Question_01\README.md" />
+    <None Include="src\Question_02\README.md" />
     <None Include="src\Tutorial\README.md" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

@@ -13,6 +13,9 @@
     <Filter Include="src\Question_01">
       <UniqueIdentifier>{ef1c5c77-776c-4e4f-ac91-e3c8dfe826ba}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Question_02">
+      <UniqueIdentifier>{e8156f52-e50e-47ca-8edc-213f7bf72203}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
@@ -71,6 +74,9 @@
     </None>
     <None Include="src\Question_01\README.md">
       <Filter>src\Question_01</Filter>
+    </None>
+    <None Include="src\Question_02\README.md">
+      <Filter>src\Question_02</Filter>
     </None>
   </ItemGroup>
 </Project>
