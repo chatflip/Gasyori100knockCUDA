@@ -20,7 +20,7 @@ We appreciate your interest, but we are not seeking contributions to this reposi
 
 | No.| Title(JP) | Title(EN) |
 | - | -------- | ------- |
-| 1 | [チャネル入れ替え](src/Question_01/README.md)  | Channel Swapping |
+| 1 | [チャネル入れ替え](src/Question_01)  | Channel Swapping |
 | 2 | グレースケール化 | Grayscale Conversion |
 | 3 | 二値化 | Binarization |
 | 4 | 大津の二値化 | Otsu's Binarization |
