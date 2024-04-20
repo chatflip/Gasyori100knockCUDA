@@ -1,5 +1,5 @@
 #include "../ImageProcessingTest.hpp"
-#include "channel_swap.cuh"
+#include "bgr2rgb.cuh"
 
 namespace {
 int numQuestions = 1;
@@ -29,8 +29,7 @@ TEST_F(ImageProcessingTest, Question_01_cpu) {
   cpuTimer->writeToFile(logPath, header, footer);
   cpuTimer->print(header, footer);
 
-  MatCompareResult compareResult = compareMat(resultCpu, desiredImage);
-  EXPECT_EQ(compareResult, MatCompareResult::kMatch);
+  compareMat(resultCpu, desiredImage);
 }
 
 TEST_F(ImageProcessingTest, Question_01_gpu) {
@@ -55,8 +54,7 @@ TEST_F(ImageProcessingTest, Question_01_gpu) {
   gpuTimer->writeToFile(logPath, header, footer);
   gpuTimer->print(header, footer);
 
-  MatCompareResult compareResult = compareMat(resultGpu, desiredImage);
-  EXPECT_EQ(compareResult, MatCompareResult::kMatch);
+  compareMat(resultGpu, desiredImage);
 }
 
 TEST_F(ImageProcessingTest, Question_01_gpu_thrust) {
@@ -80,8 +78,7 @@ TEST_F(ImageProcessingTest, Question_01_gpu_thrust) {
   gpuTimer->writeToFile(logPath, header, footer);
   gpuTimer->print(header, footer);
 
-  MatCompareResult compareResult = compareMat(resultGpu, desiredImage);
-  EXPECT_EQ(compareResult, MatCompareResult::kMatch);
+  compareMat(resultGpu, desiredImage);
 }
 
 TEST_F(ImageProcessingTest, Question_01_gpu_texture) {
@@ -105,6 +102,5 @@ TEST_F(ImageProcessingTest, Question_01_gpu_texture) {
   gpuTimer->writeToFile(logPath, header, footer);
   gpuTimer->print(header, footer);
 
-  MatCompareResult compareResult = compareMat(resultGpu, desiredImage);
-  EXPECT_EQ(compareResult, MatCompareResult::kMatch);
+  compareMat(resultGpu, desiredImage);
 }

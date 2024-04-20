@@ -1,5 +1,5 @@
 
-#include "channel_swap.cuh"
+#include "bgr2rgb.cuh"
 
 __global__ void bgr2rgbKernel(uchar* input, uchar* output, int width,
                               int height) {
