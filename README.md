@@ -22,7 +22,7 @@ We appreciate your interest, but we are not seeking contributions to this reposi
 | - | -------- | ------- | ------- |
 | 1 | チャネル入れ替え  | Channel Swapping | [src/Question_01](src/Question_01) |
 | 2 | グレースケール化 | Grayscale Conversion |[src/Question_02](src/Question_02) |
-| 3 | 二値化 | Binarization | |
+| 3 | 二値化 | Binarization | [src/Question_03](src/Question_03) |
 | 4 | 大津の二値化 | Otsu's Binarization | |
 | 5 | HSV変換 | HSV Conversion | |
 | 6 | 減色処理 | Color Reduction | |
