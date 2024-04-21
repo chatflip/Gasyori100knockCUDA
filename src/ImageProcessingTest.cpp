@@ -74,25 +74,44 @@ std::string ImageProcessingTest::formatDepthMismatchMessage(
       actual.depth(), expected.depth());
 }
 
-std::string ImageProcessingTest::formatContentMismatchMessage(
-    const cv::Mat& actual, const cv::Mat& expected) const {
-  cv::Mat diff;
-  cv::absdiff(expected, actual, diff);
-  int numDiffPixels = cv::countNonZero(diff);
-  double minDiff, maxDiff;
-  cv::minMaxLoc(diff, &minDiff, &maxDiff);
-  double avgDiff = cv::mean(diff)[0];
-  return std::format(
-      "Mat pixels are not equal\n"
-      "Number of pixels with different intensities:\t{}\n"
-      "Minimum intensity difference:\t{}\n"
-      "Maximum intensity difference:\t{}\n"
-      "Average intensity difference:\t{:.2f}",
-      numDiffPixels, minDiff, maxDiff, avgDiff);
+void ImageProcessingTest::analyzeMatDiff(
+    const cv::Mat& actual, const cv::Mat& expected, double& maxAbsDiff,
+    int& numDiffPixels, std::vector<cv::Point>& diffPositions) const {
+  double minAbsVal, minRelVal;
+  cv::Mat absDiff, relDiff;
+  cv::absdiff(actual, expected, absDiff);
+  cv::minMaxLoc(absDiff, &minAbsVal, &maxAbsDiff);
+  numDiffPixels = cv::countNonZero(absDiff);
+  cv::findNonZero(absDiff, diffPositions);
 }
 
-void ImageProcessingTest::compareMat(const cv::Mat& actual,
-                                     const cv::Mat& expected) const {
+std::string ImageProcessingTest::formatContentMismatchMessage(
+    const cv::Mat& actual, const cv::Mat& expected) const {
+  double maxAbsDiff;
+  int numDiffPixels;
+  std::vector<cv::Point> diffPositions;
+  analyzeMatDiff(actual, expected, maxAbsDiff, numDiffPixels, diffPositions);
+
+  std::stringstream ss;
+  for (const cv::Point diffPos : diffPositions) {
+    auto x = diffPos.x;
+    auto y = diffPos.y;
+    uchar actualIntensity = actual.at<uchar>(y, x);
+    uchar expectedIntensity = expected.at<uchar>(y, x);
+    std::string meg = std::format("Actual({0},{1})={2}, Expected({0},{1})={3}",
+                                  x, y, actualIntensity, expectedIntensity);
+    ss << meg << std::endl;
+  }
+
+  return std::format(
+      "Number of pixels with different intensities:\t{}\n"
+      "Maximum intensity difference:\t{}\n"
+      "Difference Details:\n{}",
+      numDiffPixels, maxAbsDiff, ss.str());
+}
+
+void ImageProcessingTest::compareMatEqual(const cv::Mat& actual,
+                                          const cv::Mat& expected) const {
   EXPECT_TRUE(actual.size() == expected.size())
       << formatSizeMismatchMessage(actual, expected);
 
@@ -108,10 +127,58 @@ void ImageProcessingTest::compareMat(const cv::Mat& actual,
   cv::absdiff(actual, expected, diff);
   cv::split(diff, diffChannels);
 
+  int numNonZero = 0;
   for (const auto& channel : diffChannels) {
-    if (cv::countNonZero(channel) != 0) {
-      FAIL() << formatContentMismatchMessage(actual, expected);
-    }
+    numNonZero += cv::countNonZero(channel);
   }
-  SUCCEED();
+
+  if (numNonZero == 0) {
+    SUCCEED();
+  } else {
+    FAIL() << "Mat pixels are not equal\n"
+           << formatContentMismatchMessage(actual, expected);
+  }
 };
+
+void ImageProcessingTest::compareMatAlmostEqual(
+    const cv::Mat& actual, const cv::Mat& expected, double thrMaxAbsDiff,
+    double thrDiffPixelsPercent) const {
+  EXPECT_TRUE(actual.size() == expected.size())
+      << formatSizeMismatchMessage(actual, expected);
+  EXPECT_TRUE(actual.type() == expected.type())
+      << formatTypeMismatchMessage(actual, expected);
+  EXPECT_TRUE(actual.channels() == expected.channels())
+      << formatChannelsMismatchMessage(actual, expected);
+  EXPECT_TRUE(actual.depth() == expected.depth())
+      << formatDepthMismatchMessage(actual, expected);
+
+  cv::Mat diff;
+  std::vector<cv::Mat> diffChannels;
+  cv::absdiff(actual, expected, diff);
+  cv::split(diff, diffChannels);
+
+  int numNonZero = 0;
+  for (const auto& channel : diffChannels) {
+    numNonZero += cv::countNonZero(channel);
+  }
+  if (numNonZero == 0) {
+    SUCCEED();
+  }
+
+  double maxAbsDiff;
+  int numDiffPixels;
+  std::vector<cv::Point> diffPositions;
+  analyzeMatDiff(actual, expected, maxAbsDiff, numDiffPixels, diffPositions);
+
+  double diffPixelsPercent = numDiffPixels * 100.0 / actual.size().area();
+
+  if (maxAbsDiff <= thrMaxAbsDiff &&
+      diffPixelsPercent <= thrDiffPixelsPercent) {
+    std::cout << "Mat pixels are almost equal\n"
+              << formatContentMismatchMessage(actual, expected) << std::endl;
+    SUCCEED();
+  } else {
+    FAIL() << "Mat pixels are not equal\n"
+           << formatContentMismatchMessage(actual, expected);
+  }
+}

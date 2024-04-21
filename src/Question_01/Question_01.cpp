@@ -29,7 +29,7 @@ TEST_F(ImageProcessingTest, Question_01_cpu) {
   cpuTimer->writeToFile(logPath, header, footer);
   cpuTimer->print(header, footer);
 
-  compareMat(resultCpu, desiredImage);
+  compareMatEqual(resultCpu, desiredImage);
 }
 
 TEST_F(ImageProcessingTest, Question_01_gpu) {
@@ -54,7 +54,7 @@ TEST_F(ImageProcessingTest, Question_01_gpu) {
   gpuTimer->writeToFile(logPath, header, footer);
   gpuTimer->print(header, footer);
 
-  compareMat(resultGpu, desiredImage);
+  compareMatEqual(resultGpu, desiredImage);
 }
 
 TEST_F(ImageProcessingTest, Question_01_gpu_thrust) {
@@ -78,7 +78,7 @@ TEST_F(ImageProcessingTest, Question_01_gpu_thrust) {
   gpuTimer->writeToFile(logPath, header, footer);
   gpuTimer->print(header, footer);
 
-  compareMat(resultGpu, desiredImage);
+  compareMatEqual(resultGpu, desiredImage);
 }
 
 TEST_F(ImageProcessingTest, Question_01_gpu_texture) {
@@ -102,5 +102,5 @@ TEST_F(ImageProcessingTest, Question_01_gpu_texture) {
   gpuTimer->writeToFile(logPath, header, footer);
   gpuTimer->print(header, footer);
 
-  compareMat(resultGpu, desiredImage);
+  compareMatEqual(resultGpu, desiredImage);
 }

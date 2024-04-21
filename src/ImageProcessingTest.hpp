@@ -23,7 +23,10 @@ class ImageProcessingTest : public ::testing::Test {
   std::string getCurrentTestName() const;
   std::string getGtestLogDir() const;
 
-  void compareMat(const cv::Mat& actual, const cv::Mat& expected) const;
+  void compareMatEqual(const cv::Mat& actual, const cv::Mat& expected) const;
+  void compareMatAlmostEqual(const cv::Mat& actual, const cv::Mat& expected,
+                             double thrMaxAbsDiff,
+                             double thrDiffPixelsPercent) const;
 
   cv::Mat inputImage;
   std::vector<std::string> ignoreNames;
@@ -34,6 +37,9 @@ class ImageProcessingTest : public ::testing::Test {
  private:
   const std::string smallImagePath = "assets\\scene_small.jpg";
   const std::string largeImagePath = "assets\\scene_large.jpg";
+  void analyzeMatDiff(const cv::Mat& actual, const cv::Mat& expected,
+                      double& maxAbsDiff, int& numDiffPixels,
+                      std::vector<cv::Point>& diffPositions) const;
   std::string formatSizeMismatchMessage(const cv::Mat& actual,
                                         const cv::Mat& expected) const;
   std::string formatTypeMismatchMessage(const cv::Mat& actual,
