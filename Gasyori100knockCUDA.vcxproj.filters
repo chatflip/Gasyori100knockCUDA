@@ -16,6 +16,9 @@
     <Filter Include="src\Question_02">
       <UniqueIdentifier>{e8156f52-e50e-47ca-8edc-213f7bf72203}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Question_03">
+      <UniqueIdentifier>{92daf071-f4da-4dc6-8948-76ae6f0afbf2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
@@ -45,6 +48,9 @@
     <ClCompile Include="src\Question_02\Question_02.cpp">
       <Filter>src\Question_02</Filter>
     </ClCompile>
+    <ClCompile Include="src\Question_03\Question_03.cpp">
+      <Filter>src\Question_03</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CudaCompile Include="src\Question_01\bgr2rgb.cu">
@@ -52,6 +58,9 @@
     </CudaCompile>
     <CudaCompile Include="src\Question_02\bgr2gray.cu">
       <Filter>src\Question_02</Filter>
+    </CudaCompile>
+    <CudaCompile Include="src\Question_03\binarization.cu">
+      <Filter>src\Question_03</Filter>
     </CudaCompile>
   </ItemGroup>
   <ItemGroup>
@@ -76,6 +85,9 @@
     <ClInclude Include="src\Question_02\bgr2gray.cuh">
       <Filter>src\Question_02</Filter>
     </ClInclude>
+    <ClInclude Include="src\Question_03\binarization.cuh">
+      <Filter>src\Question_03</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="src\Tutorial\README.md">
@@ -87,5 +99,6 @@
     <None Include="src\Question_02\README.md">
       <Filter>src\Question_02</Filter>
     </None>
+    <None Include="src\Question_03\README.md" />
   </ItemGroup>
 </Project>

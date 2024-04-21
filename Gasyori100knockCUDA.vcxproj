@@ -15,6 +15,7 @@
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\Question_01\Question_01.cpp" />
     <ClCompile Include="src\Question_02\Question_02.cpp" />
+    <ClCompile Include="src\Question_03\Question_03.cpp" />
     <ClCompile Include="src\Tutorial\Tutorial.cpp" />
     <ClCompile Include="src\Utils\CudaResourceManager.cpp" />
     <ClCompile Include="src\Utils\TimerBase.cpp" />
@@ -24,11 +25,13 @@
   <ItemGroup>
     <CudaCompile Include="src\Question_01\bgr2rgb.cu" />
     <CudaCompile Include="src\Question_02\bgr2gray.cu" />
+    <CudaCompile Include="src\Question_03\binarization.cu" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\ImageProcessingTest.hpp" />
     <ClInclude Include="src\Question_01\bgr2rgb.cuh" />
     <ClInclude Include="src\Question_02\bgr2gray.cuh" />
+    <ClInclude Include="src\Question_03\binarization.cuh" />
     <ClInclude Include="src\Utils\CudaResourceManager.hpp" />
     <ClInclude Include="src\Utils\TimerBase.hpp" />
     <ClInclude Include="src\Utils\TimerCpu.hpp" />
@@ -37,6 +40,7 @@
   <ItemGroup>
     <None Include="src\Question_01\README.md" />
     <None Include="src\Question_02\README.md" />
+    <None Include="src\Question_03\README.md" />
     <None Include="src\Tutorial\README.md" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
