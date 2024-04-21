@@ -1,0 +1,15 @@
+Question_03_gpu
+CPU Name: Intel(R) Core(TM) i9-9900K CPU @ 3.60GHz
+GPU Name: NVIDIA GeForce RTX 2080 Ti
+Build: Release
+-----------------------------------------
+Async Allocate Device Memory 0.00 ms
+Async Transfer Host to Device 1.49 ms
+Async Execute Cuda Kernel 0.24 ms
+Async Transfer Device to Host Memory 0.83 ms
+Async Deallocate Device Memory 0.01 ms
+Wait For GPU Execution 1.02 ms
+Allocate Result Memory 0.05 ms
+Prepare Async Streams 0.00 ms
+-----------------------------------------
+Elapsed time: 32.81 ms
