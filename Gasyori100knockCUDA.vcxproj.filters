@@ -42,14 +42,20 @@
     <ClCompile Include="src\Utils\CudaResourceManager.cpp">
       <Filter>src\Utils</Filter>
     </ClCompile>
+    <ClCompile Include="src\Question_02\Question_02.cpp">
+      <Filter>src\Question_02</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <CudaCompile Include="src\Question_01\channel_swap.cu">
+    <CudaCompile Include="src\Question_01\bgr2rgb.cu">
       <Filter>src\Question_01</Filter>
+    </CudaCompile>
+    <CudaCompile Include="src\Question_02\bgr2gray.cu">
+      <Filter>src\Question_02</Filter>
     </CudaCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\Question_01\channel_swap.cuh">
+    <ClInclude Include="src\Question_01\bgr2rgb.cuh">
       <Filter>src\Question_01</Filter>
     </ClInclude>
     <ClInclude Include="src\Utils\TimerBase.hpp">
@@ -66,6 +72,9 @@
     </ClInclude>
     <ClInclude Include="src\Utils\CudaResourceManager.hpp">
       <Filter>src\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Question_02\bgr2gray.cuh">
+      <Filter>src\Question_02</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

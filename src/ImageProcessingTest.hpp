@@ -9,15 +9,6 @@
 #include "Utils/TimerCpu.hpp"
 #include "Utils/TimerGpu.hpp"
 
-enum class MatCompareResult {
-  kMatch = 0,
-  kContentMismatch = -1,
-  kSizeMismatch = -2,
-  kTypeMismatch = -3,
-  kChannelMismatch = -4,
-  kUnknown = -5
-};
-
 class ImageProcessingTest : public ::testing::Test {
  public:
   static std::string getQuestionLogDir(int numQuestion);
@@ -32,8 +23,10 @@ class ImageProcessingTest : public ::testing::Test {
   std::string getCurrentTestName() const;
   std::string getGtestLogDir() const;
 
-  MatCompareResult compareMat(const cv::Mat& actual,
-                              const cv::Mat& desired) const;
+  void compareMatEqual(const cv::Mat& actual, const cv::Mat& expected) const;
+  void compareMatAlmostEqual(const cv::Mat& actual, const cv::Mat& expected,
+                             double thrMaxAbsDiff,
+                             double thrDiffPixelsPercent) const;
 
   cv::Mat inputImage;
   std::vector<std::string> ignoreNames;
@@ -44,4 +37,17 @@ class ImageProcessingTest : public ::testing::Test {
  private:
   const std::string smallImagePath = "assets\\scene_small.jpg";
   const std::string largeImagePath = "assets\\scene_large.jpg";
+  void analyzeMatDiff(const cv::Mat& actual, const cv::Mat& expected,
+                      double& maxAbsDiff, int& numDiffPixels,
+                      std::vector<cv::Point>& diffPositions) const;
+  std::string formatSizeMismatchMessage(const cv::Mat& actual,
+                                        const cv::Mat& expected) const;
+  std::string formatTypeMismatchMessage(const cv::Mat& actual,
+                                        const cv::Mat& expected) const;
+  std::string formatChannelsMismatchMessage(const cv::Mat& actual,
+                                            const cv::Mat& expected) const;
+  std::string formatDepthMismatchMessage(const cv::Mat& actual,
+                                         const cv::Mat& expected) const;
+  std::string formatContentMismatchMessage(const cv::Mat& actual,
+                                           const cv::Mat& expected) const;
 };

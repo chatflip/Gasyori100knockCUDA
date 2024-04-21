@@ -17,17 +17,19 @@ void TimerGpu::start(const std::string& name, cudaStream_t stream) {
   started[name] = true;
   stopped[name] = false;
   cudaEvent_t startEvent;
-  checkError(cudaEventCreate(&startEvent), "creating start event " + name);
+  checkError(cudaEventCreate(&startEvent),
+             "creating start event(" + name + ")");
   checkError(cudaEventRecord(startEvent, stream),
-             "recording start event " + name);
+             "recording start event(" + name + ")");
   startEvents[name] = startEvent;
 }
 
 void TimerGpu::stop(const std::string& name) {
   stopped[name] = true;
   cudaEvent_t stopEvent;
-  checkError(cudaEventCreate(&stopEvent), "creating stop event " + name);
-  checkError(cudaEventRecord(stopEvent, 0), "recording stop event" + name);
+  checkError(cudaEventCreate(&stopEvent), "creating stop event(" + name + ")");
+  checkError(cudaEventRecord(stopEvent, 0),
+             "recording stop event(" + name + ")");
   checkError(cudaEventSynchronize(stopEvent),
              "synchronizing on stop event " + name);
   stopEvents[name] = stopEvent;
@@ -37,8 +39,9 @@ void TimerGpu::stop(const std::string& name, cudaStream_t stream,
                     bool syncEvent) {
   stopped[name] = true;
   cudaEvent_t stopEvent;
-  checkError(cudaEventCreate(&stopEvent), "creating stop event " + name);
-  checkError(cudaEventRecord(stopEvent, stream), "recording stop event" + name);
+  checkError(cudaEventCreate(&stopEvent), "creating stop event(" + name + ")");
+  checkError(cudaEventRecord(stopEvent, stream),
+             "recording stop event(" + name + ")");
   if (syncEvent) {
     checkError(cudaEventSynchronize(stopEvent),
                "synchronizing on stop event " + name);

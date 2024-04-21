@@ -4,12 +4,12 @@ GPU Name: NVIDIA GeForce RTX 2080 Ti
 Build: Release
 -----------------------------------------
 Async Allocate Device Memory 0.00 ms
-Async Transfer Host to Device 1.32 ms
-Async Execute Cuda Kernel 1.15 ms
-Async Transfer Device to Host Memory 2.81 ms
+Async Transfer Host to Device 1.94 ms
+Async Execute Cuda Kernel 0.40 ms
+Async Transfer Device to Host Memory 2.38 ms
 Async Deallocate Device Memory 0.01 ms
-Wait For GPU Execution 0.00 ms
+Wait For GPU Execution 1.30 ms
 Allocate Result Memory 0.02 ms
 Prepare Async Streams 0.00 ms
 -----------------------------------------
-Elapsed time: 52.37 ms
+Elapsed time: 48.79 ms
