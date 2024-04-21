@@ -1,7 +1,4 @@
 #include <cuda_runtime.h>
-#include <thrust/copy.h>
-#include <thrust/device_vector.h>
-#include <thrust/system/cuda/execution_policy.h>
 
 #include <opencv2/opencv.hpp>
 
