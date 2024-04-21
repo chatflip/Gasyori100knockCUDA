@@ -60,15 +60,15 @@ TEST_F(ImageProcessingTest, Question_03_cpu) {
   compareMatAlmostEqual(resultCpu, desiredImage, thrMaxAbsDiff,
                         thrDiffPixelsPercent);
 }
-/*
-TEST_F(ImageProcessingTest, Question_02_gpu) {
+
+TEST_F(ImageProcessingTest, Question_03_gpu) {
   cv::Mat desiredImage = MakeQ3desiredMat(inputImage);
   std::shared_ptr<TimerCpu> cpuTimer = std::make_shared<TimerCpu>();
   std::shared_ptr<TimerGpu> gpuTimer = std::make_shared<TimerGpu>();
 
   cpuTimer->start(actualProcessTimeName);
   int numStreams = 8;
-  cv::Mat resultGpu = bgr2grayGpuMultiStream(
+  cv::Mat resultGpu = binarizationGpuMultiStream(
       inputImage, numStreams, resourceManager, cpuTimer, gpuTimer);
   cpuTimer->stop(actualProcessTimeName);
   cpuTimer->recordAll();
@@ -86,4 +86,3 @@ TEST_F(ImageProcessingTest, Question_02_gpu) {
   compareMatAlmostEqual(resultGpu, desiredImage, thrMaxAbsDiff,
                         thrDiffPixelsPercent);
 }
-*/

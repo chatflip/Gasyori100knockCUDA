@@ -1,7 +1,7 @@
 #include "binarization.cuh"
-/*
-__global__ void bgr2grayMultiStreamKernel(uchar* input, uchar* output,
-                                          int width, int height) {
+
+__global__ void binarizationMultiStreamKernel(uchar* input, uchar* output,
+                                              int width, int height) {
   int x = blockIdx.x * blockDim.x + threadIdx.x;
   int y = blockIdx.y * blockDim.y + threadIdx.y;
   if (x >= width || y >= height) return;
@@ -10,10 +10,10 @@ __global__ void bgr2grayMultiStreamKernel(uchar* input, uchar* output,
   int outIdx = y * width + x;
   float gray = __roundf(0.114f * input[inIdx] + 0.587f * input[inIdx + 1] +
                         0.299f * input[inIdx + 2]);
-  output[outIdx] = static_cast<uchar>(gray);
+  output[outIdx] = gray >= 128 ? 255 : 0;
 }
 
-cv::Mat bgr2grayGpuMultiStream(
+cv::Mat binarizationGpuMultiStream(
     cv::Mat image, int numStreams,
     std::shared_ptr<CudaResourceManager> resourceManager,
     std::shared_ptr<TimerCpu> cpuTimer, std::shared_ptr<TimerGpu> gpuTimer) {
@@ -67,8 +67,8 @@ cv::Mat bgr2grayGpuMultiStream(
         (i == numStreams - 1) ? height - i * rowsPerStream : rowsPerStream;
     dim3 gridSize((width + blockSize.x - 1) / blockSize.x,
                   (heightPerStream + blockSize.y - 1) / blockSize.y);
-    bgr2grayMultiStreamKernel<<<gridSize, blockSize, sharedMemSizeByte,
-                                streams.at(i)>>>(
+    binarizationMultiStreamKernel<<<gridSize, blockSize, sharedMemSizeByte,
+                                    streams.at(i)>>>(
         d_inputs.at(i), d_outputs.at(i), width, heightPerStream);
     gpuTimer->stop("Async Execute Cuda Kernel", streams.at(i), false);
   }
@@ -98,4 +98,3 @@ cv::Mat bgr2grayGpuMultiStream(
   gpuTimer->stop("Wait For GPU Execution");
   return result;
 }
-*/

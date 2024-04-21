@@ -6,10 +6,10 @@
 #include "../Utils/TimerCpu.hpp"
 #include "../Utils/TimerGpu.hpp"
 
-__global__ void bgr2grayMultiStreamKernel(uchar* input, uchar* output,
+__global__ void binarizationMultiStreamKernel(uchar* input, uchar* output,
                                           int width, int height);
 
-cv::Mat bgr2grayGpuMultiStream(
+cv::Mat binarizationGpuMultiStream(
     cv::Mat image, int numStreams,
     std::shared_ptr<CudaResourceManager> resourceManager,
     std::shared_ptr<TimerCpu> cpuTimer, std::shared_ptr<TimerGpu> gpuTimer);
