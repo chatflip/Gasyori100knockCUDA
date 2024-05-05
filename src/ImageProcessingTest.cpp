@@ -1,7 +1,9 @@
 #include "ImageProcessingTest.hpp"
 
 void ImageProcessingTest::SetUp() {
-  inputImage = readAssetsImage(true);
+  bool isLargeImage = true;
+  inputImage = readAssetsImage(isLargeImage);
+  dummyImage = readDummyImage(isLargeImage);
   ignoreNames.push_back(actualProcessTimeName);
   resourceManager = std::make_shared<CudaResourceManager>();
 }
@@ -21,6 +23,11 @@ const std::string& ImageProcessingTest::getAssetImagePath(bool isLarge) const {
 cv::Mat ImageProcessingTest::readAssetsImage(bool isLageImage) const {
   cv::Mat image = cv::imread(getAssetImagePath(isLageImage), cv::IMREAD_COLOR);
   return image.clone();
+};
+cv::Mat ImageProcessingTest::readDummyImage(bool isLageImage) const {
+  cv::Mat image = readAssetsImage(isLageImage);
+  cv::Mat dummy = cv::Mat::zeros(image.size(), image.type());
+  return dummy.clone();
 };
 
 std::string ImageProcessingTest::getCurrentTestName() const {
