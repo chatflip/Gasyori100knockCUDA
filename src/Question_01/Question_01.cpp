@@ -57,9 +57,14 @@ TEST_F(ImageProcessingTest, Question_01_gpu) {
   cv::Mat desiredImage = MakeQ1desiredMat(inputImage);
   std::shared_ptr<TimerCpu> cpuTimer = std::make_shared<TimerCpu>();
   std::shared_ptr<TimerGpu> gpuTimer = std::make_shared<TimerGpu>();
+  int numStreams = 8;
+
+  // Warm up CUDA Runtime
+  bgr2rgbGpuMultiStream(dummyImage, numStreams, resourceManager,
+                        std::make_shared<TimerCpu>(),
+                        std::make_shared<TimerGpu>());
 
   cpuTimer->start(actualProcessTimeName);
-  int numStreams = 8;
   cv::Mat resultGpu = bgr2rgbGpuMultiStream(
       inputImage, numStreams, resourceManager, cpuTimer, gpuTimer);
   cpuTimer->stop(actualProcessTimeName);
@@ -82,6 +87,10 @@ TEST_F(ImageProcessingTest, Question_01_gpu_thrust) {
   cv::Mat desiredImage = MakeQ1desiredMat(inputImage);
   std::shared_ptr<TimerCpu> cpuTimer = std::make_shared<TimerCpu>();
   std::shared_ptr<TimerGpu> gpuTimer = std::make_shared<TimerGpu>();
+
+  // warm up
+  bgr2rgbGpuThrust(dummyImage, resourceManager, std::make_shared<TimerCpu>(),
+                   std::make_shared<TimerGpu>());
 
   cpuTimer->start(actualProcessTimeName);
   cv::Mat resultGpu =
@@ -106,6 +115,10 @@ TEST_F(ImageProcessingTest, Question_01_gpu_texture) {
   cv::Mat desiredImage = MakeQ1desiredMat(inputImage);
   std::shared_ptr<TimerCpu> cpuTimer = std::make_shared<TimerCpu>();
   std::shared_ptr<TimerGpu> gpuTimer = std::make_shared<TimerGpu>();
+
+  // warm up
+  bgr2rgbGpuTexture(dummyImage, resourceManager, std::make_shared<TimerCpu>(),
+                    std::make_shared<TimerGpu>());
 
   cpuTimer->start(actualProcessTimeName);
   cv::Mat resultGpu =

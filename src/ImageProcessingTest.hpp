@@ -19,6 +19,7 @@ class ImageProcessingTest : public ::testing::Test {
   void SetUp() override;
   void TearDown() override;
   cv::Mat readAssetsImage(bool isLageImage = false) const;
+  cv::Mat readDummyImage(bool isLageImage = false) const;
   const std::string& getAssetImagePath(bool isLarge = false) const;
   std::string getCurrentTestName() const;
   std::string getGtestLogDir() const;
@@ -28,7 +29,7 @@ class ImageProcessingTest : public ::testing::Test {
                              double thrMaxAbsDiff,
                              double thrDiffPixelsPercent) const;
 
-  cv::Mat inputImage;
+  cv::Mat inputImage, dummyImage;
   std::vector<std::string> ignoreNames;
   const std::string actualProcessTimeName =
       "Actual Image Processing Time on CPU";
