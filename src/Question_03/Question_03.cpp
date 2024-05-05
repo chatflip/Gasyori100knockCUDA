@@ -65,9 +65,14 @@ TEST_F(ImageProcessingTest, Question_03_gpu) {
   cv::Mat desiredImage = MakeQ3desiredMat(inputImage);
   std::shared_ptr<TimerCpu> cpuTimer = std::make_shared<TimerCpu>();
   std::shared_ptr<TimerGpu> gpuTimer = std::make_shared<TimerGpu>();
+  int numStreams = 8;
+
+  // warm up
+  binarizationGpuMultiStream(dummyImage, numStreams, resourceManager,
+                             std::make_shared<TimerCpu>(),
+                             std::make_shared<TimerGpu>());
 
   cpuTimer->start(actualProcessTimeName);
-  int numStreams = 8;
   cv::Mat resultGpu = binarizationGpuMultiStream(
       inputImage, numStreams, resourceManager, cpuTimer, gpuTimer);
   cpuTimer->stop(actualProcessTimeName);
