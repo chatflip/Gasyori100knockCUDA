@@ -88,6 +88,10 @@ TEST_F(ImageProcessingTest, Question_01_gpu_thrust) {
   std::shared_ptr<TimerCpu> cpuTimer = std::make_shared<TimerCpu>();
   std::shared_ptr<TimerGpu> gpuTimer = std::make_shared<TimerGpu>();
 
+  // warm up
+  bgr2rgbGpuThrust(dummyImage, resourceManager, std::make_shared<TimerCpu>(),
+                   std::make_shared<TimerGpu>());
+
   cpuTimer->start(actualProcessTimeName);
   cv::Mat resultGpu =
       bgr2rgbGpuThrust(inputImage, resourceManager, cpuTimer, gpuTimer);
@@ -111,6 +115,10 @@ TEST_F(ImageProcessingTest, Question_01_gpu_texture) {
   cv::Mat desiredImage = MakeQ1desiredMat(inputImage);
   std::shared_ptr<TimerCpu> cpuTimer = std::make_shared<TimerCpu>();
   std::shared_ptr<TimerGpu> gpuTimer = std::make_shared<TimerGpu>();
+
+  // warm up
+  bgr2rgbGpuTexture(dummyImage, resourceManager, std::make_shared<TimerCpu>(),
+                    std::make_shared<TimerGpu>());
 
   cpuTimer->start(actualProcessTimeName);
   cv::Mat resultGpu =
