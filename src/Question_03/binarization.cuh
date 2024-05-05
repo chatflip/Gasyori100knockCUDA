@@ -7,7 +7,7 @@
 #include "../Utils/TimerGpu.hpp"
 
 __global__ void binarizationMultiStreamKernel(uchar* input, uchar* output,
-                                          int width, int height);
+                                              int width, int height);
 
 cv::Mat binarizationGpuMultiStream(
     cv::Mat image, int numStreams,
