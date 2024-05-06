@@ -99,6 +99,8 @@
     <None Include="src\Question_02\README.md">
       <Filter>src\Question_02</Filter>
     </None>
-    <None Include="src\Question_03\README.md" />
+    <None Include="src\Question_03\README.md">
+      <Filter>src\Question_03</Filter>
+    </None>
   </ItemGroup>
 </Project>
