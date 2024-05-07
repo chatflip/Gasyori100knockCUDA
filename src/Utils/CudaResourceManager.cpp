@@ -17,6 +17,9 @@ CudaResourceManager::~CudaResourceManager() {
   for (auto stream : streams) {
     cudaStreamDestroy(stream);
   }
+  if (isMarkered) {
+    nvtxRangePop();
+  }
 }
 
 std::vector<cudaStream_t> CudaResourceManager::createCudaStreams(
@@ -36,4 +39,14 @@ std::vector<cudaStream_t> CudaResourceManager::getStreams(int numStreams) {
     cudaStreams.push_back(streams.at(i));
   }
   return cudaStreams;
+}
+
+void CudaResourceManager::pushMarker(std::string markerName) {
+  nvtxRangePushA(markerName.c_str());
+  isMarkered = true;
+}
+
+void CudaResourceManager::popMarker() {
+  nvtxRangePop();
+  isMarkered = false;
 }

@@ -60,10 +60,13 @@ TEST_F(ImageProcessingTest, Question_01_gpu) {
   int numStreams = 8;
 
   // Warm up CUDA Runtime
+  resourceManager->pushMarker("WarmUp");
   bgr2rgbGpuMultiStream(dummyImage, numStreams, resourceManager,
                         std::make_shared<TimerCpu>(),
                         std::make_shared<TimerGpu>());
+  resourceManager->popMarker();
 
+  resourceManager->pushMarker("bgr2rgbGpuMultiStream");
   cpuTimer->start(actualProcessTimeName);
   cv::Mat resultGpu = bgr2rgbGpuMultiStream(
       inputImage, numStreams, resourceManager, cpuTimer, gpuTimer);
@@ -73,6 +76,7 @@ TEST_F(ImageProcessingTest, Question_01_gpu) {
   cpuTimer->popRecord(actualProcessTimeName);
   gpuTimer->recordAll();
   gpuTimer->mergeRecords(*cpuTimer);
+  resourceManager->popMarker();
 
   std::string header = gpuTimer->createHeader(getCurrentTestName());
   std::string footer = gpuTimer->createFooter(elapsedTime);
@@ -89,9 +93,12 @@ TEST_F(ImageProcessingTest, Question_01_gpu_thrust) {
   std::shared_ptr<TimerGpu> gpuTimer = std::make_shared<TimerGpu>();
 
   // warm up
+  resourceManager->pushMarker("WarmUp");
   bgr2rgbGpuThrust(dummyImage, resourceManager, std::make_shared<TimerCpu>(),
                    std::make_shared<TimerGpu>());
+  resourceManager->popMarker();
 
+  resourceManager->pushMarker("bgr2rgbGpuThrust");
   cpuTimer->start(actualProcessTimeName);
   cv::Mat resultGpu =
       bgr2rgbGpuThrust(inputImage, resourceManager, cpuTimer, gpuTimer);
@@ -101,6 +108,7 @@ TEST_F(ImageProcessingTest, Question_01_gpu_thrust) {
   cpuTimer->popRecord(actualProcessTimeName);
   gpuTimer->recordAll();
   gpuTimer->mergeRecords(*cpuTimer);
+  resourceManager->popMarker();
 
   std::string header = gpuTimer->createHeader(getCurrentTestName());
   std::string footer = gpuTimer->createFooter(elapsedTime);
@@ -117,9 +125,12 @@ TEST_F(ImageProcessingTest, Question_01_gpu_texture) {
   std::shared_ptr<TimerGpu> gpuTimer = std::make_shared<TimerGpu>();
 
   // warm up
+  resourceManager->pushMarker("WarmUp");
   bgr2rgbGpuTexture(dummyImage, resourceManager, std::make_shared<TimerCpu>(),
                     std::make_shared<TimerGpu>());
+  resourceManager->popMarker();
 
+  resourceManager->pushMarker("bgr2rgbGpuTexture");
   cpuTimer->start(actualProcessTimeName);
   cv::Mat resultGpu =
       bgr2rgbGpuTexture(inputImage, resourceManager, cpuTimer, gpuTimer);
@@ -129,6 +140,7 @@ TEST_F(ImageProcessingTest, Question_01_gpu_texture) {
   cpuTimer->popRecord(actualProcessTimeName);
   gpuTimer->recordAll();
   gpuTimer->mergeRecords(*cpuTimer);
+  resourceManager->popMarker();
 
   std::string header = gpuTimer->createHeader(getCurrentTestName());
   std::string footer = gpuTimer->createFooter(elapsedTime);

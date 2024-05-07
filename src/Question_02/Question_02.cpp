@@ -66,10 +66,13 @@ TEST_F(ImageProcessingTest, Question_02_gpu) {
   int numStreams = 8;
 
   // warm up
+  resourceManager->pushMarker("WarmUp");
   bgr2grayGpuMultiStream(dummyImage, numStreams, resourceManager,
                          std::make_shared<TimerCpu>(),
                          std::make_shared<TimerGpu>());
+  resourceManager->popMarker();
 
+  resourceManager->pushMarker("bgr2grayGpuMultiStream");
   cpuTimer->start(actualProcessTimeName);
   cv::Mat resultGpu = bgr2grayGpuMultiStream(
       inputImage, numStreams, resourceManager, cpuTimer, gpuTimer);
@@ -79,6 +82,7 @@ TEST_F(ImageProcessingTest, Question_02_gpu) {
   cpuTimer->popRecord(actualProcessTimeName);
   gpuTimer->recordAll();
   gpuTimer->mergeRecords(*cpuTimer);
+  resourceManager->popMarker();
 
   std::string header = gpuTimer->createHeader(getCurrentTestName());
   std::string footer = gpuTimer->createFooter(elapsedTime);
